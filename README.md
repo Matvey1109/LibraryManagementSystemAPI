@@ -37,6 +37,7 @@
 Модель Member хранит базовую информацию о читателях.
 Модель Book хранит основную информацию о книгах.
 Модель Borrowing отслеживает заимствования книг.
+Все типы связи в моделях имеют отношение One-to-Many.
 
 ## 2. Инструменты для хранения данных:
 ![DataStorage](https://raw.github.com/Matvey1109/LibraryManagementSystemAPI/Lab1/screenshots/DataStorage.png)
@@ -68,9 +69,10 @@ BookStorage:
 - updateBook(Book.ID, Book.Title, Book.Author, Book.PublicationYear, Book.Genre, Book.AvailableCopies, Book.TotalCopies): Обновляет информацию о книге, используя ее идентификатор и новые данные (название, автор, год издания, жанр, доступные копии, общее количество копий).
 
 BorrowingStorage:
+- getAllBorrowings(): Возвращает список всех заимствований книг библиотеки.
+- getMemberBooks(Borrowing.MemberID): Возвращает список всех книг, которые заимствовал указанный член библиотеки, используя его идентификатор.
 - borrowBook(Borrowing.BookID, Borrowing.MemberID, Borrowing.BorrowDate): Записывает факт заимствования книги членом библиотеки, указывая идентификатор книги, идентификатор члена и дату заимствования.
 - returnBook(Borrowing.ID): Записывает факт возврата книги, используя идентификатор записи о заимствовании.
-- getMemberBooks(Borrowing.MemberID): Возвращает список всех книг, которые заимствовал указанный член библиотеки, используя его идентификатор.
 
 ## 2.4. Конструкторы:
 - NewInMemoryDataStorage(): функция для создания объекта InMemoryDataStorage.
@@ -83,23 +85,24 @@ BorrowingStorage:
 
 ## 3.2. Методы (обработчики API-запросов):
 Member:
-- getAllMembersHandler(): использует метод getAllMembers.
-- getMemberHandler(): использует метод getMember.
-- addMemberHandler(): использует метод addMember.
-- deleteMemberHandler(): использует метод deleteMember.
-- updateMemberHandler(): использует метод updateMember.
+- getAllMembersHandler(): использует метод getAllMembers. *GET /members*
+- getMemberHandler(): использует метод getMember. *GET /members/{memberId}*
+- addMemberHandler(): использует метод addMember. *POST /members*
+- deleteMemberHandler(): использует метод deleteMember. *DELETE /members/{memberId}*
+- updateMemberHandler(): использует метод updateMember. *PUT /members/{memberId}*
 
 Книги:
-- getAllBooksHandler(): использует метод getAllBooks.
-- getBookHandler(): использует метод getBook.
-- addBookHandler(): использует метод addBook.
-- deleteBookHandler(): использует метод deleteBook.
-- updateBookHandler(): использует метод updateBook.
+- getAllBooksHandler(): использует метод getAllBooks. *GET /books*
+- getBookHandler(): использует метод getBook. *GET /books/{bookId}*
+- addBookHandler(): использует метод addBook. *POST /books*
+- deleteBookHandler(): использует метод deleteBook. *DELETE /books/{bookId}*
+- updateBookHandler(): использует метод updateBook. *PUT /books/{bookId}*
 
 Заимствования:
-- borrowBookHandler(): использует метод borrowBook.
-- returnBookHandler(): использует метод returnBook.
-- getMemberBooksHandler(): использует метод getMemberBooks.
+- getAllBorrowingsHandler(): использует метод getMemberBooks. *GET /borrowings*
+- getMemberBooksHandler(): использует метод getMemberBooks. *GET /borrowings/{memberId}*
+- borrowBookHandler(): использует метод borrowBook. *POST /borrowings*
+- returnBookHandler(): использует метод returnBook. *PUT /borrowings/{borrowingId}*
 
 ## 3.3. Конструктор:
 - NewAPIService(storage DataStorage): Создает новый экземпляр сервиса APIService, используя указанное хранилище данных (DataStorage).
