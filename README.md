@@ -7,7 +7,7 @@
 ***Цель проекта:***
 повысить эффективность работы библиотеки, улучшить доступ к ее ресурсам и облегчить взаимодействие между библиотекарями и читателями.
 
-## 1. Модели данных в системе менеджмента библиотеки:
+## 1. Модели данных:
 ![DataModels](https://raw.github.com/Matvey1109/LibraryManagementSystemAPI/Lab1/screenshots/DataModels.png)
 ### Модель Member:
 - ID (string): Уникальный идентификатор члена библиотеки.
@@ -76,7 +76,7 @@ BorrowingStorage:
 - NewInMemoryDataStorage(): функция для создания объекта InMemoryDataStorage.
 - NewMongoDBStorage(mongoURI string, dbName string): функция для создания объекта MongoDBStorage, указав URI и название базы.
 
-## 3. Сервис, представляющий API:
+## 3. Сервис, предоставляющий API:
 ![APIService](https://raw.github.com/Matvey1109/LibraryManagementSystemAPI/Lab1/screenshots/APIService.png)
 ## 3.1. Реализация:
 - **APIService** - это сервис, который предоставляет API для доступа к данным о членах библиотеки, книгах и заимствованиях. Он использует хранилище данных (DataStorage), которое может быть реализовано локально (InMemoryDataStorage) или в базе данных (MongoDBDataStorage). APIService реализует обработку API-запросов. Его методы используют в своей реализации методы интерфейса DataStorage для работы с данными.
