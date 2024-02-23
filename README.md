@@ -42,7 +42,7 @@
 ## 2. Инструменты для хранения данных:
 ![DataStorage](https://raw.github.com/Matvey1109/LibraryManagementSystemAPI/Lab1/screenshots/DataStorage.png)
 ## 2.1. Интерфейсы:
-- **DataStorage:** Общий интерфейс для всех хранилищ данных. Определяет базовые методы для работы с данными: получение всех элементов, получение по идентификатору, добавление, удаление и обновление.
+- **DataStorage:** Общий интерфейс для всех хранилищ данных. Определяет базовые методы для работы с данными: получение всех элементов, получение по идентификатору, добавление, удаление и обновление. Интерфейс DataStorage действует как адаптер, позволяя клиентам работать с различными реализациями хранилища через единый интерфейс. 
     - **MemberStorage:** Интерфейс для управления данными о читателях библиотеки.
     - **BookStorage:** Интерфейс для управления данными о книгах.
     - **BorrowingStorage:** Интерфейс для управления данными о заимствовании книг.
@@ -76,7 +76,7 @@ BorrowingStorage:
 
 ## 2.4. Конструкторы:
 - NewInMemoryDataStorage(): функция для создания объекта InMemoryDataStorage.
-- NewMongoDBStorage(mongoURI string, dbName string): функция для создания объекта MongoDBStorage, указав URI и название базы.
+- NewMongoDBStorage(mongoURI string, dbName string): функция для создания объекта MongoDBStorage, указав URI и название базы данных.
 
 ## 3. Сервис, предоставляющий API:
 ![APIService](https://raw.github.com/Matvey1109/LibraryManagementSystemAPI/Lab1/screenshots/APIService.png)
@@ -105,7 +105,7 @@ Member:
 - returnBookHandler(): использует метод returnBook. *PUT /borrowings/{borrowingId}*
 
 ## 3.3. Конструктор:
-- NewAPIService(storage DataStorage): Создает новый экземпляр сервиса APIService, используя указанное хранилище данных (DataStorage).
+- NewAPIService(storage DataStorage): Создает новый экземпляр сервиса APIService, используя указанное хранилище данных (DataStorage). Реализация конструктора создает singleton, что означает, что в рамках приложения будет существовать только один экземпляр APIService.
 
 ## 3.4. Дополнительные функции:
 - registerAPIEndpoints(apiService *APIService): Регистрирует обработчики API-запросов для сервиса.
@@ -113,3 +113,9 @@ Member:
 
 ## 4. Общая структура проекта:
 ![Architecture](https://raw.github.com/Matvey1109/LibraryManagementSystemAPI/Lab1/screenshots/Architecture.png)
+
+## 5. Клиентская часть кода:
+1. Создание хранилища данных.
+2. Создание сервиса APIService.
+3. Регистрация API-эндпоинтов.
+4. Запуск сервера.
