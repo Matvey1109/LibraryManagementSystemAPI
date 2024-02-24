@@ -41,49 +41,79 @@
 
 ## 2. Инструменты для хранения данных:
 ![DataStorage](https://raw.github.com/Matvey1109/LibraryManagementSystemAPI/Lab1/screenshots/DataStorage.png)
-## 2.1. Интерфейсы:
-- **DataStorage:** Общий интерфейс для всех хранилищ данных. Определяет базовые методы для работы с данными: получение всех элементов, получение по идентификатору, добавление, удаление и обновление. Интерфейс DataStorage действует как адаптер, позволяя клиентам работать с различными реализациями хранилища через единый интерфейс. 
-    - **MemberStorage:** Интерфейс для управления данными о читателях библиотеки.
-    - **BookStorage:** Интерфейс для управления данными о книгах.
-    - **BorrowingStorage:** Интерфейс для управления данными о заимствовании книг.
+## 2.1. Абстрактная фабрика:
+- **StorageFactory:** Абстрактная фабрика, представленная интерфейсом. Интерфейс не содержит никаких реализаций, он лишь задает общий контракт для создания объектов хранения.
 
-## 2.2. Реализации:
-- **InMemoryDataStorage:** Хранилище данных локально. Является простой реализацией для небольших объемов данных.
-  - **InMemoryMemberStorage, InMemoryBookStorage, InMemoryBorrowingStorage:** Конкретные реализации интерфейсов для хранения членов библиотеки, книг и заимствования книг локально.
-- **MongoDBDataStorage:** Хранилище данных в базе данных MongoDB. Является более надежным и масштабируемым решением.
-    - **MongoDBMemberStorage, MongoDBBookStorage, MongoDBBorrowingStorage:** Конкретные реализации интерфейсов для хранения членов библиотеки, книг и заимствования книг в MongoDB.
+## 2.2. Конкретные фабрики:
+- **LocalStorageFactory:** Фабрика, которая отвечает за создание экземпляров LocalStorage. Является конкретной реализацией интерфейса StorageFactory.
+- **MongoDBStorageFactory:** Фабрика, которая отвечает за создание экземпляров MongoDBStorage. Является конкретной реализацией интерфейса StorageFactory. Эта фабрика более сложная, так как ей необходимо подключиться к базе данных MongoDB, создать коллекции для книг, читателей и заимствований, а затем вернуть новый объект MongoDBStorage.
 
-## 2.3. Методы:
-MemberStorage:
-- getAllMembers(): Возвращает список всех членов библиотеки.
-- getMember(Member.ID): Возвращает одного члена библиотеки по его идентификатору.
-- addMember(Member.Name, Member.Address, Member.Email): Добавляет нового члена библиотеки, указав его имя, адрес и электронную почту.
-- deleteMember(Member.ID): Удаляет члена библиотеки по его идентификатору.
-- updateMember(Member.ID, Member.Name, Member.Address, Member.Email): Обновляет информацию о члене библиотеки, используя его идентификатор и новые данные (имя, адрес, email).
+## 2.3. Абстрактные продукты:
+- **Storage** Интерфейс, который декларирует CRUD-методы для работы с книгами (Book), читателями (Member) и заимствованиями (Borrowing).
+  - **LocalStorage, MongoDBStorage:** Конкретные реализации интерфейса для хранения членов библиотеки, книг и заимствования книг локально и с помощью базы данных MongoDB соответственно.
 
-BookStorage:
-- getAllBooks(): Возвращает список всех книг в библиотеке.
-- getBook(Book.ID): Возвращает одну книгу по ее идентификатору.
-- addBook(Book.Title, Book.Author, Book.PublicationYear, Book.Genre, Book.TotalCopies): Добавляет новую книгу в библиотеку, указав ее название, автора, год издания, жанр и общее количество копий.
-- deleteBook(Book.ID): Удаляет книгу из библиотеки по ее идентификатору.
-- updateBook(Book.ID, Book.Title, Book.Author, Book.PublicationYear, Book.Genre, Book.AvailableCopies, Book.TotalCopies): Обновляет информацию о книге, используя ее идентификатор и новые данные (название, автор, год издания, жанр, доступные копии, общее количество копий).
+## 2.4. Методы:
+StorageFactory:
+- CreateStorage(): Создает объект реализации интерфейса Storage в зависимости от конкретной фабрики.
 
-BorrowingStorage:
-- getAllBorrowings(): Возвращает список всех заимствований книг библиотеки.
-- getMemberBooks(Borrowing.MemberID): Возвращает список всех книг, которые заимствовал указанный член библиотеки, используя его идентификатор.
-- borrowBook(Borrowing.BookID, Borrowing.MemberID, Borrowing.BorrowDate): Записывает факт заимствования книги членом библиотеки, указывая идентификатор книги, идентификатор члена и дату заимствования.
-- returnBook(Borrowing.ID): Записывает факт возврата книги, используя идентификатор записи о заимствовании.
+Storage:
+- GetAllMembersStorage(): Возвращает список всех читателей.
+- GetMemberStorage(id string): Возвращает информацию о конкретном читателе по его ID.
+- AddMemberStorage(member Member): Добавляет нового читателя в библиотеку, принимая объект Member с его данными.
+- UpdateMemberStorage(id string, member Member): Обновляет информацию о читателе по его ID, принимая объект Member с новыми данными.
+- DeleteMemberStorage(id string): Удаляет читателя по его ID.
+- GetAllBooksStorage(): Возвращает список всех книг.
+- GetBookStorage(id string): Возвращает информацию о конкретной книге по ее ID.
+- AddBookStorage(book Book): Добавляет новую книгу в библиотеку, принимая объект Book с ее данными.
+- UpdateBookStorage(id string, book Book): Обновляет информацию о книге по ее ID, принимая объект Book с новыми данными.
+- DeleteBookStorage(id string): Удаляет книгу из библиотеки по ее ID.
+- GetAllBorrowingsStorage(): Возвращает список всех заимствований книг.
+- GetBorrowingStorage(id string): Возвращает информацию о конкретном заимствовании по его ID.
+- AddBorrowingStorage(borrowing Borrowing): Добавляет новое заимствование книги, принимая объект Borrowing с его данными.
+- UpdateBorrowingStorage(id string, borrowing Borrowing): Обновляет информацию о заимствовании по его ID, принимая объект Borrowing с новыми данными.
+- DeleteBorrowingStorage(id string): Удаляет заимствование книги по его ID.
 
 ## 2.4. Конструкторы:
-- NewInMemoryDataStorage(): функция для создания объекта InMemoryDataStorage.
-- NewMongoDBStorage(mongoURI string, dbName string): функция для создания объекта MongoDBStorage, указав URI и название базы данных.
+- GetStorageFactory(typeOfStorage string): принимает тип хранилища ("local" или "mongodb") и возвращает соответствующую фабрику.
 
-## 3. Сервис, предоставляющий API:
+## 3. Бизнес-логика:
+![Repository](https://raw.github.com/Matvey1109/LibraryManagementSystemAPI/Lab1/screenshots/Repository.png)
+## 3.1. Repository:
+- Репозиторий представляет собой слой бизнес-логики. Он имеет доступ к данным, взаимодействует с хранилищем (Storage). Репозитории для читателей (MemberRepository), книг (BookRepository) и заимствований (BorrowingRepository) дополняют структуру класса Repository.
+
+## 3.2. Конкретные репозитории:
+- **MemberRepository, BookRepository, BorrowingRepository** Репозитории, которые реализуют бизнес-логику конкретной модели данных.
+
+## 3.3. Методы:
+MemberRepository:
+- GetAllMembers(): Возвращает список всех читателей.
+- GetMember(id string): Возвращает информацию о конкретном читателе.
+- AddMember(name string, address string, email string, createdAt time): Добавляет нового читателя в библиотеку.
+- UpdateMember(id string, name string, address string, email string, createdAt time): Обновляет информацию о читателе.
+- DeleteMember(id string): Удаляет читателя.
+
+BookRepository:
+- GetAllBooks(): Возвращает список всех книг.
+- GetBook(id string): Возвращает информацию о конкретной книге.
+- AddBook(title string, author string, publicationYear int, genre string, availableCopies int, totalCopies int): Добавляет новую книгу в библиотеку.
+- UpdateBook(id string, title string, author string, publicationYear int, genre string, availableCopies int, totalCopies int): Обновляет информацию о книге.
+- DeleteBook(id string): Удаляет книгу из библиотеки.
+
+BookRepository:
+- GetAllBorrowings(): Возвращает список всех заимствований книг.
+- GetMemberBooks(memberID string): Возвращает список книг, заимствованных конкретным читателем.
+- BorrowBook(bookID string, memberID string, borrowYear int): Зарегистрировать заимствование книги.
+- ReturnBook(id string): Зарегистрировать возврат книги.
+
+## 3.4. Конструкторы:
+- NewRepository(storage Storage): создает класс Repository с определенным хранилищем.
+
+## 4. Сервис, предоставляющий API:
 ![APIService](https://raw.github.com/Matvey1109/LibraryManagementSystemAPI/Lab1/screenshots/APIService.png)
-## 3.1. Реализация:
-- **APIService** - это сервис, который предоставляет API для доступа к данным о членах библиотеки, книгах и заимствованиях. Он использует хранилище данных (DataStorage), которое может быть реализовано локально (InMemoryDataStorage) или в базе данных (MongoDBDataStorage). APIService реализует обработку API-запросов. Его методы используют в своей реализации методы интерфейса DataStorage для работы с данными.
+## 4.1. Реализация:
+- **APIService** - это сервис, который предоставляет API. Он использует слой бизнес-логики (Repository) в котором происходит основные манипуляции с данными, а затем записываются в хранилище. APIService реализует обработку API-запросов. Его методы используют в своей реализации методы класса Repository.
 
-## 3.2. Методы (обработчики API-запросов):
+## 4.2. Методы (обработчики API-запросов):
 Member:
 - getAllMembersHandler(): использует метод getAllMembers. *GET /members*
 - getMemberHandler(): использует метод getMember. *GET /members/{memberId}*
@@ -105,7 +135,7 @@ Member:
 - returnBookHandler(): использует метод returnBook. *PUT /borrowings/{borrowingId}*
 
 ## 3.3. Конструктор:
-- NewAPIService(storage DataStorage): Создает новый экземпляр сервиса APIService, используя указанное хранилище данных (DataStorage). Реализация конструктора создает singleton, что означает, что в рамках приложения будет существовать только один экземпляр APIService.
+- NewAPIService(repo Repository): Создает новый экземпляр сервиса APIService, используя класс репозитория с определенным хранилищем. Реализация конструктора создает singleton, что означает, что в рамках приложения будет существовать только один экземпляр APIService.
 
 ## 3.4. Дополнительные функции:
 - registerAPIEndpoints(apiService *APIService): Регистрирует обработчики API-запросов для сервиса.
@@ -115,7 +145,8 @@ Member:
 ![Architecture](https://raw.github.com/Matvey1109/LibraryManagementSystemAPI/Lab1/screenshots/Architecture.png)
 
 ## 5. Клиентская часть кода:
-1. Создание хранилища данных.
-2. Создание сервиса APIService.
-3. Регистрация API-эндпоинтов.
-4. Запуск сервера.
+1. Создание конкретной фабрики хранилища данных.
+2. Создание хранилища данных.
+3. Создание сервиса APIService.
+4. Регистрация API-эндпоинтов.
+5. Запуск сервера.
