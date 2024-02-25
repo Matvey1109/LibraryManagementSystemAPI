@@ -48,7 +48,7 @@
 - **LocalStorageFactory:** Фабрика, которая отвечает за создание экземпляров LocalStorage. Является конкретной реализацией интерфейса StorageFactory.
 - **MongoDBStorageFactory:** Фабрика, которая отвечает за создание экземпляров MongoDBStorage. Является конкретной реализацией интерфейса StorageFactory. Эта фабрика более сложная, так как ей необходимо подключиться к базе данных MongoDB, создать коллекции для книг, читателей и заимствований, а затем вернуть новый объект MongoDBStorage.
 
-## 2.3. Абстрактные продукты:
+## 2.3. Конкретные продукты:
 - **Storage** Интерфейс, который декларирует CRUD-методы для работы с книгами (Book), читателями (Member) и заимствованиями (Borrowing).
   - **LocalStorage, MongoDBStorage:** Конкретные реализации интерфейса для хранения членов библиотеки, книг и заимствования книг локально и с помощью базы данных MongoDB соответственно.
 
@@ -115,24 +115,24 @@ BookRepository:
 
 ## 4.2. Методы (обработчики API-запросов):
 Member:
-- getAllMembersHandler(): использует метод getAllMembers. *GET /members*
-- getMemberHandler(): использует метод getMember. *GET /members/{memberId}*
-- addMemberHandler(): использует метод addMember. *POST /members*
-- deleteMemberHandler(): использует метод deleteMember. *DELETE /members/{memberId}*
-- updateMemberHandler(): использует метод updateMember. *PUT /members/{memberId}*
+- getAllMembersHandler(): использует метод GetAllMembers. *GET /members*
+- getMemberHandler(): использует метод GetMember. *GET /members/{memberId}*
+- addMemberHandler(): использует метод AddMember. *POST /members*
+- deleteMemberHandler(): использует метод DeleteMember. *DELETE /members/{memberId}*
+- updateMemberHandler(): использует метод UpdateMember. *PUT /members/{memberId}*
 
 Книги:
-- getAllBooksHandler(): использует метод getAllBooks. *GET /books*
-- getBookHandler(): использует метод getBook. *GET /books/{bookId}*
-- addBookHandler(): использует метод addBook. *POST /books*
-- deleteBookHandler(): использует метод deleteBook. *DELETE /books/{bookId}*
-- updateBookHandler(): использует метод updateBook. *PUT /books/{bookId}*
+- getAllBooksHandler(): использует метод GetAllBooks. *GET /books*
+- getBookHandler(): использует метод GetBook. *GET /books/{bookId}*
+- addBookHandler(): использует метод AddBook. *POST /books*
+- deleteBookHandler(): использует метод DeleteBook. *DELETE /books/{bookId}*
+- updateBookHandler(): использует метод UpdateBook. *PUT /books/{bookId}*
 
 Заимствования:
-- getAllBorrowingsHandler(): использует метод getMemberBooks. *GET /borrowings*
-- getMemberBooksHandler(): использует метод getMemberBooks. *GET /borrowings/{memberId}*
-- borrowBookHandler(): использует метод borrowBook. *POST /borrowings*
-- returnBookHandler(): использует метод returnBook. *PUT /borrowings/{borrowingId}*
+- getAllBorrowingsHandler(): использует метод GetAllBorrowings. *GET /borrowings*
+- getMemberBooksHandler(): использует метод GetMemberBooks. *GET /borrowings/{memberId}*
+- borrowBookHandler(): использует метод BorrowBook. *POST /borrowings*
+- returnBookHandler(): использует метод ReturnBook. *PUT /borrowings/{borrowingId}*
 
 ## 3.3. Конструктор:
 - NewAPIService(repo Repository): Создает новый экземпляр сервиса APIService, используя класс репозитория с определенным хранилищем. Реализация конструктора создает singleton, что означает, что в рамках приложения будет существовать только один экземпляр APIService.
