@@ -106,7 +106,7 @@ BookRepository:
 - ReturnBook(id string): Зарегистрировать возврат книги.
 
 ## 3.4. Конструкторы:
-- NewRepository(storage Storage): создает класс Repository с определенным хранилищем.
+- NewRepository(): создает класс Repository.
 
 ## 4. Сервис, предоставляющий API:
 ![APIService](https://raw.github.com/Matvey1109/LibraryManagementSystemAPI/Lab1/screenshots/APIService.png)
@@ -135,7 +135,7 @@ Member:
 - returnBookHandler(): использует метод ReturnBook. *PUT /borrowings/{borrowingId}*
 
 ## 3.3. Конструктор:
-- NewAPIService(repo Repository): Создает новый экземпляр сервиса APIService, используя класс репозитория с определенным хранилищем. Реализация конструктора создает singleton, что означает, что в рамках приложения будет существовать только один экземпляр APIService.
+- NewAPIService(): Создает экземпляр сервиса APIService. Реализация конструктора создает singleton, что означает, что в рамках приложения будет существовать только один экземпляр APIService.
 
 ## 3.4. Дополнительные функции:
 - registerAPIEndpoints(apiService *APIService): Регистрирует обработчики API-запросов для сервиса.
