@@ -13,8 +13,16 @@ func RegisterAPIEndpoints(apiservise *APIService) *httprouter.Router {
 	router.GET("/", apiservise.Index)
 
 	router.GET("/members", apiservise.GetAllMembersHandler)
-	router.GET("/members/:id", apiservise.GetMemberHandler)
+	router.GET("/members/:memberID", apiservise.GetMemberHandler)
 	router.POST("/members", apiservise.AddMemberHandler)
+	router.PUT("/members/:memberID", apiservise.UpdateMemberHandler)
+	router.DELETE("/members/:memberID", apiservise.DeleteMemberHandler)
+
+	router.GET("/books", apiservise.GetAllBooksHandler)
+	router.GET("/books/:bookID", apiservise.GetBookHandler)
+	router.POST("/books", apiservise.AddBookHandler)
+	router.PUT("/books/:bookID", apiservise.UpdateBookHandler)
+	router.DELETE("/books/:bookID", apiservise.DeleteBookHandler)
 	return router
 }
 
