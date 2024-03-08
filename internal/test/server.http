@@ -1,0 +1,19 @@
+GET http://localhost:8080/
+
+###
+
+GET http://localhost:8080/members
+
+###
+
+GET http://localhost:8080/members/1
+
+###
+
+POST http://localhost:8080/members
+
+{
+    "name": "John Doe",
+    "address": "Ulica",
+    "email": "test@gmail.com"
+}

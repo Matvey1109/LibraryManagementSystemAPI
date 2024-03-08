@@ -2,6 +2,7 @@ package logs
 
 import (
 	"app/pkg/loadenv"
+	"errors"
 	"fmt"
 	"log"
 	"os"
@@ -46,7 +47,7 @@ func LogWriter(method, path string, statusCode int) error {
 	}
 
 	if _, err := logFile.WriteString(message); err != nil {
-		return fmt.Errorf("failed to write to log file: %w", err)
+		return errors.New("failed to write to log file")
 	}
 
 	return nil

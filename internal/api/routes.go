@@ -1,6 +1,7 @@
 package api
 
 import (
+	errorutil "app/internal/error_util"
 	"app/internal/models"
 	"app/pkg/logs"
 	"encoding/json"
@@ -15,29 +16,41 @@ func (api *APIService) Index(w http.ResponseWriter, r *http.Request, _ httproute
 
 	err := logs.LogWriter(r.Method, "/", http.StatusOK)
 	if err != nil {
-		panic(err)
+		errorutil.PrintError(w, err, http.StatusInternalServerError)
 	}
 }
 
 // * Member
 func (api *APIService) GetAllMembersHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-	members := repository.GetAllMembers()
+	members, err := repository.GetAllMembers()
+	if err != nil {
+		errorutil.PrintError(w, err, http.StatusInternalServerError)
+		logs.LogWriter(r.Method, "/members", http.StatusInternalServerError)
+		return
+	}
+
 	fmt.Fprint(w, members)
 
-	err := logs.LogWriter(r.Method, "/members", http.StatusOK)
+	err = logs.LogWriter(r.Method, "/members", http.StatusOK)
 	if err != nil {
-		panic(err)
+		errorutil.PrintError(w, err, http.StatusInternalServerError)
 	}
 }
 
 func (api *APIService) GetMemberHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	id := ps.ByName("memberID")
-	member := repository.GetMember(id)
+	member, err := repository.GetMember(id)
+	if err != nil {
+		errorutil.PrintError(w, err, http.StatusNotFound)
+		logs.LogWriter(r.Method, "/members/{memberID}", http.StatusNotFound)
+		return
+	}
+
 	fmt.Fprint(w, member)
 
-	err := logs.LogWriter(r.Method, "/members/{memberID}", http.StatusOK)
+	err = logs.LogWriter(r.Method, "/members/{memberID}", http.StatusOK)
 	if err != nil {
-		panic(err)
+		errorutil.PrintError(w, err, http.StatusInternalServerError)
 	}
 }
 
@@ -45,19 +58,24 @@ func (api *APIService) AddMemberHandler(w http.ResponseWriter, r *http.Request, 
 	var newMember models.Member
 	err := json.NewDecoder(r.Body).Decode(&newMember)
 	if err != nil {
-		fmt.Fprintf(w, "Error decoding request body: %v", err)
-		w.WriteHeader(http.StatusBadRequest)
+		errorutil.PrintError(w, err, http.StatusBadRequest)
+		logs.LogWriter(r.Method, "/members", http.StatusBadRequest)
 		return
 	}
 
-	repository.AddMember(newMember.Name, newMember.Address, newMember.Email)
+	err = repository.AddMember(newMember.Name, newMember.Address, newMember.Email)
+	if err != nil {
+		errorutil.PrintError(w, err, http.StatusInternalServerError)
+		logs.LogWriter(r.Method, "/members", http.StatusInternalServerError)
+		return
+	}
 
-	fmt.Fprint(w, "Member added successfully!")
 	w.WriteHeader(http.StatusCreated)
+	fmt.Fprint(w, "Member added successfully!")
 
 	err = logs.LogWriter(r.Method, "/members", http.StatusCreated)
 	if err != nil {
-		panic(err)
+		errorutil.PrintError(w, err, http.StatusInternalServerError)
 	}
 }
 
@@ -67,30 +85,40 @@ func (api *APIService) UpdateMemberHandler(w http.ResponseWriter, r *http.Reques
 	var newMember models.Member
 	err := json.NewDecoder(r.Body).Decode(&newMember)
 	if err != nil {
-		fmt.Fprintf(w, "Error decoding request body: %v", err)
-		w.WriteHeader(http.StatusBadRequest)
+		errorutil.PrintError(w, err, http.StatusBadRequest)
+		logs.LogWriter(r.Method, "/members/{memberID}", http.StatusBadRequest)
 		return
 	}
 
-	repository.UpdateMember(id, newMember.Name, newMember.Address, newMember.Email)
+	err = repository.UpdateMember(id, newMember.Name, newMember.Address, newMember.Email)
+	if err != nil {
+		errorutil.PrintError(w, err, http.StatusNotFound)
+		logs.LogWriter(r.Method, "/members/{memberID}", http.StatusNotFound)
+		return
+	}
 
 	fmt.Fprint(w, "Member updated successfully!")
 
-	err = logs.LogWriter(r.Method, "/members/{memberID}", http.StatusCreated)
+	err = logs.LogWriter(r.Method, "/members/{memberID}", http.StatusOK)
 	if err != nil {
-		panic(err)
+		errorutil.PrintError(w, err, http.StatusInternalServerError)
 	}
 }
 
 func (api *APIService) DeleteMemberHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	id := ps.ByName("memberID")
-	repository.DeleteMember(id)
+	err := repository.DeleteMember(id)
+	if err != nil {
+		errorutil.PrintError(w, err, http.StatusNotFound)
+		logs.LogWriter(r.Method, "/members/{memberID}", http.StatusNotFound)
+		return
+	}
 
 	fmt.Fprint(w, "Member deleted successfully!")
 
-	err := logs.LogWriter(r.Method, "/members/{memberID}", http.StatusOK)
+	err = logs.LogWriter(r.Method, "/members/{memberID}", http.StatusOK)
 	if err != nil {
-		panic(err)
+		errorutil.PrintError(w, err, http.StatusInternalServerError)
 	}
 }
 
@@ -127,8 +155,8 @@ func (api *APIService) AddBookHandler(w http.ResponseWriter, r *http.Request, _ 
 
 	repository.AddBook(newBook.Title, newBook.Author, newBook.PublicationYear, newBook.Genre, newBook.TotalCopies)
 
-	fmt.Fprint(w, "Book added successfully!")
 	w.WriteHeader(http.StatusCreated)
+	fmt.Fprint(w, "Book added successfully!")
 
 	err = logs.LogWriter(r.Method, "/books", http.StatusCreated)
 	if err != nil {
@@ -151,7 +179,7 @@ func (api *APIService) UpdateBookHandler(w http.ResponseWriter, r *http.Request,
 
 	fmt.Fprint(w, "Book updated successfully!")
 
-	err = logs.LogWriter(r.Method, "/books/{bookID}", http.StatusCreated)
+	err = logs.LogWriter(r.Method, "/books/{bookID}", http.StatusOK)
 	if err != nil {
 		panic(err)
 	}

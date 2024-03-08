@@ -2,29 +2,28 @@ package repositories
 
 import (
 	"app/internal/models"
-	"log"
 	"time"
 )
 
 type MemberRepository struct{}
 
-func (mr *MemberRepository) GetAllMembers() []models.Member {
+func (mr *MemberRepository) GetAllMembers() ([]models.Member, error) {
 	members, err := storage.GetAllMembersStorage()
 	if err != nil {
-		log.Fatal(err)
+		return members, err
 	}
-	return members
+	return members, nil
 }
 
-func (mr *MemberRepository) GetMember(id string) models.Member {
+func (mr *MemberRepository) GetMember(id string) (models.Member, error) {
 	member, err := storage.GetMemberStorage(id)
 	if err != nil {
-		log.Fatal(err)
+		return member, err
 	}
-	return member
+	return member, nil
 }
 
-func (mr *MemberRepository) AddMember(name string, address string, email string) {
+func (mr *MemberRepository) AddMember(name string, address string, email string) error {
 	newID := GenerateID()
 	newMember := models.Member{
 		ID:        newID,
@@ -35,14 +34,15 @@ func (mr *MemberRepository) AddMember(name string, address string, email string)
 	}
 	err := storage.AddMemberStorage(newMember)
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
+	return nil
 }
 
-func (mr *MemberRepository) UpdateMember(id string, name string, address string, email string) {
+func (mr *MemberRepository) UpdateMember(id string, name string, address string, email string) error {
 	member, err := storage.GetMemberStorage(id)
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 
 	if name != "" {
@@ -57,13 +57,15 @@ func (mr *MemberRepository) UpdateMember(id string, name string, address string,
 
 	err = storage.UpdateMemberStorage(id, member)
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
+	return nil
 }
 
-func (mr *MemberRepository) DeleteMember(id string) {
+func (mr *MemberRepository) DeleteMember(id string) error {
 	err := storage.DeleteMemberStorage(id)
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
+	return nil
 }
