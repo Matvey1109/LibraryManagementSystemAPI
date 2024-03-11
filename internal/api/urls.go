@@ -1,16 +1,20 @@
 package api
 
 import (
+	"app/internal/swagger"
 	"app/pkg/loadenv"
 	"app/pkg/logs"
 	"net/http"
 
 	"github.com/julienschmidt/httprouter"
+	"github.com/rs/cors"
 )
 
-func RegisterAPIEndpoints(apiservise *APIService) *httprouter.Router {
+func RegisterAPIEndpoints(apiservise *APIService) http.Handler {
 	router := httprouter.New()
 	router.GET("/", apiservise.Index)
+
+	router.GET("/swagger", swagger.SwaggerHandler)
 
 	router.GET("/members", apiservise.GetAllMembersHandler)
 	router.GET("/members/:memberID", apiservise.GetMemberHandler)
@@ -23,11 +27,13 @@ func RegisterAPIEndpoints(apiservise *APIService) *httprouter.Router {
 	router.POST("/books", apiservise.AddBookHandler)
 	router.PUT("/books/:bookID", apiservise.UpdateBookHandler)
 	router.DELETE("/books/:bookID", apiservise.DeleteBookHandler)
-	return router
+
+	handler := cors.Default().Handler(router) // CORS
+	return handler
 }
 
-func StartServer(router *httprouter.Router) {
+func StartServer(handler http.Handler) {
 	logs.LogWriter("", "", 0)
 	_, port, _ := loadenv.LoadEnv()
-	http.ListenAndServe(port, router)
+	http.ListenAndServe(port, handler)
 }

@@ -2,28 +2,28 @@ package repositories
 
 import (
 	"app/internal/models"
-	"log"
+	"errors"
 )
 
 type BookRepository struct{}
 
-func (br *BookRepository) GetAllBooks() []models.Book {
+func (br *BookRepository) GetAllBooks() ([]models.Book, error) {
 	books, err := storage.GetAllBooksStorage()
 	if err != nil {
-		log.Fatal(err)
+		return books, err
 	}
-	return books
+	return books, nil
 }
 
-func (br *BookRepository) GetBook(id string) models.Book {
+func (br *BookRepository) GetBook(id string) (models.Book, error) {
 	book, err := storage.GetBookStorage(id)
 	if err != nil {
-		log.Fatal(err)
+		return book, err
 	}
-	return book
+	return book, nil
 }
 
-func (br *BookRepository) AddBook(title string, author string, publicationYear int, genre string, totalCopies int) {
+func (br *BookRepository) AddBook(title string, author string, publicationYear int, genre string, totalCopies int) error {
 	newID := GenerateID()
 	newBook := models.Book{
 		ID:              newID,
@@ -36,18 +36,19 @@ func (br *BookRepository) AddBook(title string, author string, publicationYear i
 	}
 	err := storage.AddBookStorage(newBook)
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
+	return nil
 }
 
-func (br *BookRepository) UpdateBook(id string, title string, author string, publicationYear int, genre string, availableCopies int, totalCopies int) {
+func (br *BookRepository) UpdateBook(id string, title string, author string, publicationYear int, genre string, availableCopies int, totalCopies int) error {
 	book, err := storage.GetBookStorage(id)
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 
 	if availableCopies > totalCopies {
-		log.Fatal("available copies cannot be greater than total copies")
+		return errors.New("available copies cannot be greater than total copies")
 	}
 
 	if title != "" {
@@ -71,13 +72,15 @@ func (br *BookRepository) UpdateBook(id string, title string, author string, pub
 
 	err = storage.UpdateBookStorage(id, book)
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
+	return err
 }
 
-func (br *BookRepository) DeleteBook(id string) {
+func (br *BookRepository) DeleteBook(id string) error {
 	err := storage.DeleteBookStorage(id)
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
+	return nil
 }

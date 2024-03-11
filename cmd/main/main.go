@@ -8,6 +8,6 @@ import (
 func main() {
 	defer logs.CloseLogFile()
 	apiservise := api.NewAPIService()
-	router := api.RegisterAPIEndpoints(apiservise)
-	api.StartServer(router)
+	handler := api.RegisterAPIEndpoints(apiservise)
+	api.StartServer(handler)
 }

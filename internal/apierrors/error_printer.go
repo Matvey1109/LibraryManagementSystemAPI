@@ -1,6 +1,6 @@
-package errorutil
+package apierrors
 
-import (
+import(
 	"fmt"
 	"net/http"
 )
@@ -8,5 +8,4 @@ import (
 func PrintError(w http.ResponseWriter, err error, statusCode int) {
 	w.WriteHeader(statusCode)
 	fmt.Fprintf(w, "%v", err)
-
 }

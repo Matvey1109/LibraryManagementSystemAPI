@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Library Management System API</title>
+  <style>
+    .endpoint {
+      margin-bottom: 15px;
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 10px;
+    }
+    .endpoint h3 {
+      cursor: pointer;
+    }
+    .endpoint .details {
+      display: none;
+      padding-top: 10px;
+    }
+  </style>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const endpoints = document.querySelectorAll(".endpoint");
+
+      const indexData = document.getElementById("indexData");
+      const fetchDataButton = document.getElementById("fetchDataButton");
+
+      const getAllMembers = document.getElementById("getAllMembers");
+      const fetchDataButton2 = document.getElementById("fetchDataButton2");
+
+      const memberIDInput = document.getElementById("memberIDInput");
+      const getMember = document.getElementById("getMember");
+      const fetchDataButton3 = document.getElementById("fetchDataButton3");
+
+      endpoints.forEach(endpoint => {
+        endpoint.querySelector("h3").addEventListener("click", function() {
+          this.nextElementSibling.classList.toggle("details");
+        });
+      });
+
+      function fetchData() {
+        fetch(`http://127.0.0.1:8080/`)
+          .then(response => response.text())
+          .then(data => {
+            indexData.textContent = data;
+          })
+          .catch(error => {
+            indexData.textContent = "Error fetching data: " + error;
+          });
+      }
+
+      function fetchData2() {
+        fetch(`http://127.0.0.1:8080/members`)
+          .then(response => response.text())
+          .then(data => {
+            getAllMembers.textContent = data;
+          })
+          .catch(error => {
+            getAllMembers.textContent = "Error fetching data: " + error;
+          });
+      }
+
+      function fetchData3() {
+        const memberID = memberIDInput.value;
+        console.log(memberID);
+        const url = `http://127.0.0.1:8080/members/${memberID}`;
+        fetch(url)
+          .then(response => response.text())
+          .then(data => {
+            getMember.textContent = data;
+          })
+          .catch(error => {
+            getMember.textContent = "Error fetching data: " + error;
+          });
+      }
+
+      fetchDataButton.addEventListener("click", fetchData);
+      fetchDataButton2.addEventListener("click", fetchData2);
+      fetchDataButton3.addEventListener("click", fetchData3);
+  });
+  </script>
+</head>
+<body>
+    <h1>Swagger UI</h1>
+    <div class="endpoint">
+      <h3>GET /</h3>
+      <div class="details">
+        <button id="fetchDataButton">Fetch Data</button>
+        <p id="indexData"></p>
+      </div>
+    </div>
+
+    <div class="endpoint">
+      <h3>GET /members</h3>
+      <div class="details">
+        <button id="fetchDataButton2">Fetch Data</button>
+        <p id="getAllMembers"></p>
+      </div>
+    </div>
+
+    <div class="endpoint">
+      <h3>GET /members/{memberID}</h3>
+      <div class="details">
+        <form id="memberForm">
+          <input type="text" id="memberIDInput" placeholder="Enter memberID">
+          <button type="button" id="fetchDataButton3">Fetch Data</button>
+        </form>
+        <p id="getMember"></p>
+      </div>
+    </div>
+  </body>
+</html>

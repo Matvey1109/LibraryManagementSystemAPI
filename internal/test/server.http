@@ -17,3 +17,15 @@ POST http://localhost:8080/members
     "address": "Ulica",
     "email": "test@gmail.com"
 }
+
+###
+
+PUT http://localhost:8080/members/65eec902a34fc56dd3e9981c
+
+{
+    "name": "John Doe 2"
+}
+
+###
+
+DELETE  http://localhost:8080/members/65eec902a34fc56dd3e9981c

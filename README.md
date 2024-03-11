@@ -74,7 +74,7 @@ Storage:
 - DeleteBorrowingStorage(id string): Удаляет заимствование книги по его ID.
 
 ## 2.4. Конструкторы:
-- GetStorageFactory(typeOfStorage string): принимает тип хранилища ("local" или "mongodb") и возвращает соответствующую фабрику.
+- GetStorageFactory(): принимает тип хранилища ("local" или "mongodb") и возвращает соответствующую фабрику.
 
 ## 3. Бизнес-логика:
 ![Repository](https://raw.github.com/Matvey1109/LibraryManagementSystemAPI/Lab1/screenshots/Repository.png)
@@ -88,14 +88,14 @@ Storage:
 MemberRepository:
 - GetAllMembers(): Возвращает список всех читателей.
 - GetMember(id string): Возвращает информацию о конкретном читателе.
-- AddMember(name string, address string, email string, createdAt time): Добавляет нового читателя в библиотеку.
-- UpdateMember(id string, name string, address string, email string, createdAt time): Обновляет информацию о читателе.
+- AddMember(name string, address string, email string): Добавляет нового читателя в библиотеку.
+- UpdateMember(id string, name string, address string, email string): Обновляет информацию о читателе.
 - DeleteMember(id string): Удаляет читателя.
 
 BookRepository:
 - GetAllBooks(): Возвращает список всех книг.
 - GetBook(id string): Возвращает информацию о конкретной книге.
-- AddBook(title string, author string, publicationYear int, genre string, availableCopies int, totalCopies int): Добавляет новую книгу в библиотеку.
+- AddBook(title string, author string, publicationYear int, genre string, totalCopies int): Добавляет новую книгу в библиотеку.
 - UpdateBook(id string, title string, author string, publicationYear int, genre string, availableCopies int, totalCopies int): Обновляет информацию о книге.
 - DeleteBook(id string): Удаляет книгу из библиотеки.
 
@@ -116,30 +116,30 @@ BookRepository:
 ## 4.2. Методы (обработчики API-запросов):
 Member:
 - getAllMembersHandler(): использует метод GetAllMembers. *GET /members*
-- getMemberHandler(): использует метод GetMember. *GET /members/{memberId}*
+- getMemberHandler(): использует метод GetMember. *GET /members/{memberID}*
 - addMemberHandler(): использует метод AddMember. *POST /members*
-- deleteMemberHandler(): использует метод DeleteMember. *DELETE /members/{memberId}*
-- updateMemberHandler(): использует метод UpdateMember. *PUT /members/{memberId}*
+- deleteMemberHandler(): использует метод DeleteMember. *DELETE /members/{memberID}*
+- updateMemberHandler(): использует метод UpdateMember. *PUT /members/{memberID}*
 
 Книги:
 - getAllBooksHandler(): использует метод GetAllBooks. *GET /books*
-- getBookHandler(): использует метод GetBook. *GET /books/{bookId}*
+- getBookHandler(): использует метод GetBook. *GET /books/{bookID}*
 - addBookHandler(): использует метод AddBook. *POST /books*
-- deleteBookHandler(): использует метод DeleteBook. *DELETE /books/{bookId}*
-- updateBookHandler(): использует метод UpdateBook. *PUT /books/{bookId}*
+- deleteBookHandler(): использует метод DeleteBook. *DELETE /books/{bookID}*
+- updateBookHandler(): использует метод UpdateBook. *PUT /books/{bookID}*
 
 Заимствования:
 - getAllBorrowingsHandler(): использует метод GetAllBorrowings. *GET /borrowings*
-- getMemberBooksHandler(): использует метод GetMemberBooks. *GET /borrowings/{memberId}*
+- getMemberBooksHandler(): использует метод GetMemberBooks. *GET /borrowings/{memberID}*
 - borrowBookHandler(): использует метод BorrowBook. *POST /borrowings*
-- returnBookHandler(): использует метод ReturnBook. *PUT /borrowings/{borrowingId}*
+- returnBookHandler(): использует метод ReturnBook. *PUT /borrowings/{borrowingID}*
 
 ## 3.3. Конструктор:
 - NewAPIService(): Создает экземпляр сервиса APIService. Реализация конструктора создает singleton, что означает, что в рамках приложения будет существовать только один экземпляр APIService.
 
 ## 3.4. Дополнительные функции:
-- registerAPIEndpoints(apiService *APIService): Регистрирует обработчики API-запросов для сервиса.
-- startServer(): Запускает сервер.
+- RegisterAPIEndpoints(apiService *APIService): Регистрирует обработчики API-запросов для сервиса.
+- StartServer(router *httprouter.Router): Запускает сервер.
 
 ## 4. Общая структура проекта:
 ![Architecture](https://raw.github.com/Matvey1109/LibraryManagementSystemAPI/Lab1/screenshots/Architecture.png)
