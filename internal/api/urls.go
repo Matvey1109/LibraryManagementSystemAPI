@@ -28,8 +28,22 @@ func RegisterAPIEndpoints(apiservise *APIService) http.Handler {
 	router.PUT("/books/:bookID", apiservise.UpdateBookHandler)
 	router.DELETE("/books/:bookID", apiservise.DeleteBookHandler)
 
-	handler := cors.Default().Handler(router) // CORS
-	return handler
+	// Serve static files
+	fs := http.FileServer(http.Dir("internal/swagger/static"))
+	router.GET("/styles.css", func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+		fs.ServeHTTP(w, r)
+	})
+	router.GET("/app.js", func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+		fs.ServeHTTP(w, r)
+	})
+
+	// CORS
+	c := cors.New(cors.Options{
+		AllowedOrigins: []string{"*"},
+		AllowedMethods: []string{"GET", "POST", "DELETE", "PUT", "OPTIONS"},
+	})
+
+	return c.Handler(router)
 }
 
 func StartServer(handler http.Handler) {
