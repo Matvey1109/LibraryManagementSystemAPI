@@ -8,7 +8,7 @@
 повысить эффективность работы библиотеки, улучшить доступ к ее ресурсам и облегчить взаимодействие между библиотекарями и читателями.
 
 ## 1. Модели данных:
-![DataModels](https://raw.github.com/Matvey1109/LibraryManagementSystemAPI/Lab1/screenshots/DataModels.png)
+![DataModels](screenshots/DataModels.png)
 ### Модель Member:
 - ID (string): Уникальный идентификатор члена библиотеки.
 - Name (string): Имя члена библиотеки.
@@ -40,7 +40,7 @@
 Все типы связи в моделях имеют отношение One-to-Many.
 
 ## 2. Инструменты для хранения данных:
-![DataStorage](https://raw.github.com/Matvey1109/LibraryManagementSystemAPI/Lab1/screenshots/DataStorage.png)
+![DataStorage](screenshots/DataStorage.png)
 ## 2.1. Абстрактная фабрика:
 - **StorageFactory:** Абстрактная фабрика, представленная интерфейсом. Интерфейс не содержит никаких реализаций, он лишь задает общий контракт для создания объектов хранения.
 
@@ -77,7 +77,7 @@ Storage:
 - GetStorageFactory(): принимает тип хранилища ("local" или "mongodb") и возвращает соответствующую фабрику.
 
 ## 3. Бизнес-логика:
-![Repository](https://raw.github.com/Matvey1109/LibraryManagementSystemAPI/Lab1/screenshots/Repository.png)
+![Repository](screenshots/Repository.png)
 ## 3.1. Repository:
 - Репозиторий представляет собой слой бизнес-логики. Он имеет доступ к данным, взаимодействует с хранилищем (Storage). Репозитории для читателей (MemberRepository), книг (BookRepository) и заимствований (BorrowingRepository) дополняют структуру класса Repository.
 
@@ -109,7 +109,7 @@ BookRepository:
 - NewRepository(): создает класс Repository.
 
 ## 4. Сервис, предоставляющий API:
-![APIService](https://raw.github.com/Matvey1109/LibraryManagementSystemAPI/Lab1/screenshots/APIService.png)
+![APIService](screenshots/APIService.png)
 ## 4.1. Реализация:
 - **APIService** - это сервис, который предоставляет API. Он использует слой бизнес-логики (Repository) в котором происходит основные манипуляции с данными, а затем записываются в хранилище. APIService реализует обработку API-запросов. Его методы используют в своей реализации методы класса Repository.
 
@@ -142,7 +142,7 @@ Member:
 - StartServer(router *httprouter.Router): Запускает сервер.
 
 ## 4. Общая структура проекта:
-![Architecture](https://raw.github.com/Matvey1109/LibraryManagementSystemAPI/Lab1/screenshots/Architecture.png)
+![Architecture](screenshots/Architecture.png)
 
 ## 5. Клиентская часть кода:
 1. Создание конкретной фабрики хранилища данных.

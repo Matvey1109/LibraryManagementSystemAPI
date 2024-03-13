@@ -8,72 +8,180 @@
 </head>
 <body>
     <h1>Swagger UI</h1>
-    <div class="endpoint">
-      <h3>GET /</h3>
-      <div class="details">
-        <button id="fetchDataButton">Fetch Data</button>
-        <p id="indexData"></p>
+    <div class="global-endpoints">
+        <h2>Global Endpoints</h2>
+      <div class="endpoint">
+        <h3>GET /</h3>
+        <div class="details">
+          <button id="indexButton">Fetch Data</button>
+          <div id="indexData">
+            <p id="dataIndexData" class="multiline"></p>
+            <p id="statusIndexData" class="status"></p>
+          </div>
+        </div>
       </div>
     </div>
 
-    <div class="endpoint">
-      <h3>GET /members</h3>
-      <div class="details">
-        <button id="fetchDataButton2">Fetch Data</button>
-        <p id="getAllMembers"></p>
+    <div class="member-endpoints">
+      <h2>Member Endpoints</h2>
+      <div class="endpoint">
+        <h3>GET /members</h3>
+        <div class="details">
+          <button id="getAllMembersButton">Fetch Data</button>
+          <div id="getAllMembers">
+            <p id="dataGetAllMembers" class="multiline"></p>
+            <p id="statusGetAllMembers" class="status"></p>
+          </div>
+        </div>
       </div>
-    </div>
 
-    <div class="endpoint">
-      <h3>GET /members/{memberID}</h3>
-      <div class="details">
-        <form id="memberForm">
-          <input type="text" id="memberIDInput" placeholder="Enter memberID">
-          <button type="button" id="fetchDataButton3">Fetch Data</button>
-        </form>
-        <p id="getMember"></p>
+      <div class="endpoint">
+        <h3>GET /members/{memberID}</h3>
+        <div class="details">
+          <form>
+            <input type="text" id="getMemberInput" placeholder="Enter memberID">
+            <button type="button" id="getMemberButton">Fetch Data</button>
+          </form>
+          <div id="getMember">
+            <p id="dataGetMember" class="multiline"></p>
+            <p id="statusGetMember" class="status"></p>
+          </div>
+        </div>
       </div>
-    </div>
 
-    <div class="endpoint">
-      <h3>POST /members</h3>
-      <div class="details">
-        <form id="postMemberForm">
-          <textarea id="memberDataInput" class="postmember-textarea" placeholder="Enter member data in JSON format">{
-  "name": "John Doe",
-  "address": "123 Main St",
-  "email": "johndoe@example.com"
+      <div class="endpoint">
+        <h3>POST /members</h3>
+        <div class="details">
+          <form>
+            <textarea id="addMemberInput" class="postmember-textarea" placeholder="Enter member data in JSON format">{
+    "name": "John Doe",
+    "address": "123 Main St",
+    "email": "johndoe@example.com"
 }</textarea>
-          <button type="button" id="postDataButton">Post Data</button>
-        </form>
-        <p id="postMemberResponse"></p>
+            <button type="button" id="addMemberButton">Post Data</button>
+          </form>
+          <div id="addMember">
+            <p id="dataAddMember" class="multiline"></p>
+            <p id="statusAddMember" class="status"></p>
+          </div>
+        </div>
       </div>
-    </div>
 
-    <div class="endpoint">
-      <h3>PUT /members/{memberID}</h3>
-      <div class="details">
-        <form id="updateMemberForm">
-          <input type="text" id="updateMemberIDInput" placeholder="Enter memberID">
-          <textarea id="updateMemberDataInput" class="postmember-textarea" placeholder="Enter updated member data in JSON format">{
-  "name": "Updated Name",
-  "address": "Updated Address",
-  "email": "updated@example.com"
+      <div class="endpoint">
+        <h3>PUT /members/{memberID}</h3>
+        <div class="details">
+          <form>
+            <input type="text" id="updateMemberIDInput" placeholder="Enter memberID">
+            <textarea id="updateMemberDataInput" class="postmember-textarea" placeholder="Enter updated member data in JSON format">{
+    "name": "Updated Name",
+    "address": "Updated Address",
+    "email": "updated@example.com"
 }</textarea>
-          <button type="button" id="updateDataButton">Update Data</button>
-        </form>
-        <p id="updateMemberResponse"></p>
+            <button type="button" id="updateMemberButton">Update Data</button>
+          </form>
+          <div id="updateMember">
+            <p id="dataUpdateMember" class="multiline"></p>
+            <p id="statusUpdateMember" class="status"></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="endpoint">
+        <h3>DELETE /members/{memberID}</h3>
+        <div class="details">
+          <form>
+            <input type="text" id="deleteMemberInput" placeholder="Enter memberID">
+            <button type="button" id="deleteMemberButton">Delete Data</button>
+          </form>
+          <div id="deleteMember">
+            <p id="dataDeleteMember" class="multiline"></p>
+            <p id="statusDeleteMember" class="status"></p>
+          </div>
+        </div>
       </div>
     </div>
 
-    <div class="endpoint">
-      <h3>DELETE /members/{memberID}</h3>
-      <div class="details">
-        <form id="deleteMemberForm">
-          <input type="text" id="deleteMemberIDInput" placeholder="Enter memberID">
-          <button type="button" id="deleteDataButton">Delete Data</button>
-        </form>
-        <p id="deleteMember"></p>
+    <div class="book-endpoints">
+      <h2>Book Endpoints</h2>
+      <div class="endpoint">
+        <h3>GET /books</h3>
+        <div class="details">
+          <button id="getAllBooksButton">Fetch Data</button>
+          <div id="getAllBooks">
+            <p id="dataGetAllBooks" class="multiline"></p>
+            <p id="statusGetAllBooks" class="status"></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="endpoint">
+        <h3>GET /books/{bookID}</h3>
+        <div class="details">
+          <form id="bookForm">
+            <input type="text" id="getBookInput" placeholder="Enter bookID">
+            <button type="button" id="getBookButton">Fetch Data</button>
+          </form>
+          <div id="getBook">
+            <p id="dataGetBook" class="multiline"></p>
+            <p id="statusGetBook" class="status"></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="endpoint">
+        <h3>POST /books</h3>
+        <div class="details">
+          <form>
+            <textarea id="addBookInput" class="postbook-textarea" placeholder="Enter book data in JSON format">{
+    "title": "Example Book",
+    "author": "John Doe",
+    "publicationYear": 2022,
+    "genre": "Fiction",
+    "totalCopies": 5
+}</textarea>
+            <button type="button" id="addBookButton">Post Data</button>
+          </form>
+          <div id="addBook">
+            <p id="dataAddBook" class="multiline"></p>
+            <p id="statusAddBook" class="status"></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="endpoint">
+        <h3>PUT /books/{bookID}</h3>
+        <div class="details">
+          <form>
+            <input type="text" id="updateBookIDInput" placeholder="Enter bookID">
+            <textarea id="updateBookDataInput" class="postbook-textarea" placeholder="Enter updated book data in JSON format">{
+    "title": null,
+    "author": null,
+    "publicationYear": null,
+    "genre": null,
+    "totalCopies": null,
+    "availableCopies": 4
+}</textarea>
+            <button type="button" id="updateBookButton">Update Data</button>
+          </form>
+          <div id="updateBook">
+            <p id="dataUpdateBook" class="multiline"></p>
+            <p id="statusUpdateBook" class="status"></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="endpoint">
+        <h3>DELETE /books/{bookID}</h3>
+        <div class="details">
+          <form>
+            <input type="text" id="deleteBookInput" placeholder="Enter bookID">
+            <button type="button" id="deleteBookButton">Delete Data</button>
+          </form>
+          <div id="deleteBook">
+            <p id="dataDeleteBook" class="multiline"></p>
+            <p id="statusDeleteBook" class="status"></p>
+          </div>
+        </div>
       </div>
     </div>
   </body>

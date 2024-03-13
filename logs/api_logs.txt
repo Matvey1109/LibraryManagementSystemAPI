@@ -1,6 +1,9 @@
 Starting server on port 8080
-[2024-03-12 12:39:24] GET / - 200
-[2024-03-12 12:39:29] POST /members - 201
-[2024-03-12 12:39:31] GET /members - 200
-[2024-03-12 12:39:37] DELETE /members/{memberID} - 200
-[2024-03-12 12:39:39] GET /members - 200
+[2024-03-13 23:04:17] GET /members - 200
+[2024-03-13 23:04:19] POST /members - 201
+[2024-03-13 23:04:20] GET /members - 200
+[2024-03-13 23:04:24] GET /members/{memberID} - 200
+[2024-03-13 23:04:32] POST /members - 201
+[2024-03-13 23:04:34] GET /members - 200
+[2024-03-13 23:04:42] DELETE /members/{memberID} - 200
+[2024-03-13 23:04:44] GET /members - 200

@@ -39,20 +39,20 @@ func (mr *MemberRepository) AddMember(name string, address string, email string)
 	return nil
 }
 
-func (mr *MemberRepository) UpdateMember(id string, name string, address string, email string) error {
+func (mr *MemberRepository) UpdateMember(id string, name *string, address *string, email *string) error {
 	member, err := storage.GetMemberStorage(id)
 	if err != nil {
 		return err
 	}
 
-	if name != "" {
-		member.Name = name
+	if name != nil {
+		member.Name = *name
 	}
-	if address != "" {
-		member.Address = address
+	if address != nil {
+		member.Address = *address
 	}
-	if email != "" {
-		member.Email = email
+	if email != nil {
+		member.Email = *email
 	}
 
 	err = storage.UpdateMemberStorage(id, member)

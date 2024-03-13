@@ -1,22 +1,19 @@
 package api
 
 import (
-	"app/internal/apierrors"
-	"app/internal/models"
+	"app/internal/serializers"
 	"app/pkg/logs"
-	"encoding/json"
-	"fmt"
 	"net/http"
 
 	"github.com/julienschmidt/httprouter"
 )
 
 func (api *APIService) Index(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-	fmt.Fprint(w, "Welcome to the Library Management System API!\n")
+	w.Write([]byte("Welcome to the Library Management System API!"))
 
 	err := logs.LogWriter(r.Method, "/", http.StatusOK)
 	if err != nil {
-		apierrors.PrintError(w, err, http.StatusInternalServerError)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 }
 
@@ -24,16 +21,23 @@ func (api *APIService) Index(w http.ResponseWriter, r *http.Request, _ httproute
 func (api *APIService) GetAllMembersHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	members, err := repository.GetAllMembers()
 	if err != nil {
-		apierrors.PrintError(w, err, http.StatusInternalServerError)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		logs.LogWriter(r.Method, "/members", http.StatusInternalServerError)
 		return
 	}
 
-	fmt.Fprint(w, members)
+	jsonData, err := serializers.SerializeJsonData(members)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		logs.LogWriter(r.Method, "/members", http.StatusBadRequest)
+		return
+	}
+
+	w.Write(jsonData)
 
 	err = logs.LogWriter(r.Method, "/members", http.StatusOK)
 	if err != nil {
-		apierrors.PrintError(w, err, http.StatusInternalServerError)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 }
 
@@ -41,67 +45,94 @@ func (api *APIService) GetMemberHandler(w http.ResponseWriter, r *http.Request, 
 	id := ps.ByName("memberID")
 	member, err := repository.GetMember(id)
 	if err != nil {
-		apierrors.PrintError(w, err, http.StatusNotFound)
+		http.Error(w, err.Error(), http.StatusNotFound)
 		logs.LogWriter(r.Method, "/members/{memberID}", http.StatusNotFound)
 		return
 	}
 
-	fmt.Fprint(w, member)
+	jsonData, err := serializers.SerializeJsonData(member)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		logs.LogWriter(r.Method, "/members/{memberID}", http.StatusBadRequest)
+		return
+	}
+
+	w.Write(jsonData)
 
 	err = logs.LogWriter(r.Method, "/members/{memberID}", http.StatusOK)
 	if err != nil {
-		apierrors.PrintError(w, err, http.StatusInternalServerError)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 }
 
 func (api *APIService) AddMemberHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-	var newMember models.Member
-	err := json.NewDecoder(r.Body).Decode(&newMember)
+	data, err := serializers.DeserializeJsonData(r)
 	if err != nil {
-		apierrors.PrintError(w, err, http.StatusBadRequest)
+		http.Error(w, err.Error(), http.StatusBadRequest)
 		logs.LogWriter(r.Method, "/members", http.StatusBadRequest)
 		return
 	}
 
-	err = repository.AddMember(newMember.Name, newMember.Address, newMember.Email)
+	var (
+		name, address, email string
+	)
+
+	name, address, email, err = serializers.ValidateAddMemberData(data)
 	if err != nil {
-		apierrors.PrintError(w, err, http.StatusInternalServerError)
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		logs.LogWriter(r.Method, "/members", http.StatusBadRequest)
+		return
+	}
+
+	err = repository.AddMember(name, address, email)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		logs.LogWriter(r.Method, "/members", http.StatusInternalServerError)
 		return
 	}
 
 	w.WriteHeader(http.StatusCreated)
-	fmt.Fprint(w, "Member added successfully!")
+	w.Write([]byte("Member added successfully!"))
 
 	err = logs.LogWriter(r.Method, "/members", http.StatusCreated)
 	if err != nil {
-		apierrors.PrintError(w, err, http.StatusInternalServerError)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 }
 
 func (api *APIService) UpdateMemberHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	id := ps.ByName("memberID")
 
-	var newMember models.Member
-	err := json.NewDecoder(r.Body).Decode(&newMember)
+	data, err := serializers.DeserializeJsonData(r)
 	if err != nil {
-		apierrors.PrintError(w, err, http.StatusBadRequest)
+		http.Error(w, err.Error(), http.StatusBadRequest)
 		logs.LogWriter(r.Method, "/members/{memberID}", http.StatusBadRequest)
 		return
 	}
 
-	err = repository.UpdateMember(id, newMember.Name, newMember.Address, newMember.Email)
+	var (
+		name, address, email *string
+	)
+
+	name, address, email, err = serializers.ValidateUpdateMemberData(data)
 	if err != nil {
-		apierrors.PrintError(w, err, http.StatusNotFound)
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		logs.LogWriter(r.Method, "/members/{memberID}", http.StatusBadRequest)
+		return
+	}
+
+	err = repository.UpdateMember(id, name, address, email)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusNotFound)
 		logs.LogWriter(r.Method, "/members/{memberID}", http.StatusNotFound)
 		return
 	}
 
-	fmt.Fprint(w, "Member updated successfully!")
+	w.Write([]byte("Member updated successfully!"))
 
 	err = logs.LogWriter(r.Method, "/members/{memberID}", http.StatusOK)
 	if err != nil {
-		apierrors.PrintError(w, err, http.StatusInternalServerError)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 }
 
@@ -109,16 +140,16 @@ func (api *APIService) DeleteMemberHandler(w http.ResponseWriter, r *http.Reques
 	id := ps.ByName("memberID")
 	err := repository.DeleteMember(id)
 	if err != nil {
-		apierrors.PrintError(w, err, http.StatusNotFound)
+		http.Error(w, err.Error(), http.StatusNotFound)
 		logs.LogWriter(r.Method, "/members/{memberID}", http.StatusNotFound)
 		return
 	}
 
-	fmt.Fprint(w, "Member deleted successfully!")
+	w.Write([]byte("Member deleted successfully!"))
 
 	err = logs.LogWriter(r.Method, "/members/{memberID}", http.StatusOK)
 	if err != nil {
-		apierrors.PrintError(w, err, http.StatusInternalServerError)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 }
 
@@ -126,16 +157,23 @@ func (api *APIService) DeleteMemberHandler(w http.ResponseWriter, r *http.Reques
 func (api *APIService) GetAllBooksHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	books, err := repository.GetAllBooks()
 	if err != nil {
-		apierrors.PrintError(w, err, http.StatusInternalServerError)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		logs.LogWriter(r.Method, "/books", http.StatusInternalServerError)
 		return
 	}
 
-	fmt.Fprint(w, books)
+	jsonData, err := serializers.SerializeJsonData(books)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		logs.LogWriter(r.Method, "/books", http.StatusBadRequest)
+		return
+	}
+
+	w.Write(jsonData)
 
 	err = logs.LogWriter(r.Method, "/books", http.StatusOK)
 	if err != nil {
-		apierrors.PrintError(w, err, http.StatusInternalServerError)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 }
 
@@ -143,67 +181,96 @@ func (api *APIService) GetBookHandler(w http.ResponseWriter, r *http.Request, ps
 	id := ps.ByName("bookID")
 	book, err := repository.GetBook(id)
 	if err != nil {
-		apierrors.PrintError(w, err, http.StatusNotFound)
+		http.Error(w, err.Error(), http.StatusNotFound)
 		logs.LogWriter(r.Method, "/books/{bookID}", http.StatusNotFound)
 		return
 	}
 
-	fmt.Fprint(w, book)
+	jsonData, err := serializers.SerializeJsonData(book)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		logs.LogWriter(r.Method, "/books/{bookID}", http.StatusBadRequest)
+		return
+	}
+
+	w.Write(jsonData)
 
 	err = logs.LogWriter(r.Method, "/books/{bookID}", http.StatusOK)
 	if err != nil {
-		apierrors.PrintError(w, err, http.StatusInternalServerError)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 }
 
 func (api *APIService) AddBookHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-	var newBook models.Book
-	err := json.NewDecoder(r.Body).Decode(&newBook)
+	data, err := serializers.DeserializeJsonData(r)
 	if err != nil {
-		apierrors.PrintError(w, err, http.StatusBadRequest)
+		http.Error(w, err.Error(), http.StatusBadRequest)
 		logs.LogWriter(r.Method, "/books", http.StatusBadRequest)
 		return
 	}
 
-	err = repository.AddBook(newBook.Title, newBook.Author, newBook.PublicationYear, newBook.Genre, newBook.TotalCopies)
+	var (
+		title, author, genre         string
+		publicationYear, totalCopies int
+	)
+
+	title, author, publicationYear, genre, totalCopies, err = serializers.ValidateAddBookData(data)
 	if err != nil {
-		apierrors.PrintError(w, err, http.StatusInternalServerError)
-		logs.LogWriter(r.Method, "/books", http.StatusInternalServerError)
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		logs.LogWriter(r.Method, "/books", http.StatusBadRequest)
+		return
+	}
+
+	err = repository.AddBook(title, author, publicationYear, genre, totalCopies)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		logs.LogWriter(r.Method, "/books", http.StatusBadRequest)
 		return
 	}
 
 	w.WriteHeader(http.StatusCreated)
-	fmt.Fprint(w, "Book added successfully!")
+	w.Write([]byte("Book added successfully!"))
 
 	err = logs.LogWriter(r.Method, "/books", http.StatusCreated)
 	if err != nil {
-		apierrors.PrintError(w, err, http.StatusInternalServerError)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 }
 
 func (api *APIService) UpdateBookHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	id := ps.ByName("bookID")
 
-	var newBook models.Book
-	err := json.NewDecoder(r.Body).Decode(&newBook)
+	data, err := serializers.DeserializeJsonData(r)
 	if err != nil {
-		apierrors.PrintError(w, err, http.StatusBadRequest)
+		http.Error(w, err.Error(), http.StatusBadRequest)
 		logs.LogWriter(r.Method, "/books/{bookID}", http.StatusBadRequest)
 		return
 	}
 
-	err = repository.UpdateBook(id, newBook.Title, newBook.Author, newBook.PublicationYear, newBook.Genre, newBook.AvailableCopies, newBook.TotalCopies)
+	var (
+		title, author, genre                          *string
+		publicationYear, availableCopies, totalCopies *int
+	)
+
+	title, author, publicationYear, genre, availableCopies, totalCopies, err = serializers.ValidateUpdateBookData(data)
 	if err != nil {
-		apierrors.PrintError(w, err, http.StatusNotFound)
-		logs.LogWriter(r.Method, "/books/{bookID}", http.StatusNotFound)
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		logs.LogWriter(r.Method, "/books/{bookID}", http.StatusBadRequest)
 		return
 	}
 
-	fmt.Fprint(w, "Book updated successfully!")
+	err = repository.UpdateBook(id, title, author, publicationYear, genre, availableCopies, totalCopies)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		logs.LogWriter(r.Method, "/books/{bookID}", http.StatusBadRequest)
+		return
+	}
+
+	w.Write([]byte("Book updated successfully!"))
 
 	err = logs.LogWriter(r.Method, "/books/{bookID}", http.StatusOK)
 	if err != nil {
-		apierrors.PrintError(w, err, http.StatusInternalServerError)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 }
 
@@ -211,15 +278,15 @@ func (api *APIService) DeleteBookHandler(w http.ResponseWriter, r *http.Request,
 	id := ps.ByName("bookID")
 	err := repository.DeleteBook(id)
 	if err != nil {
-		apierrors.PrintError(w, err, http.StatusNotFound)
+		http.Error(w, err.Error(), http.StatusNotFound)
 		logs.LogWriter(r.Method, "/books/{bookID}", http.StatusNotFound)
 		return
 	}
 
-	fmt.Fprint(w, "Book deleted successfully!")
+	w.Write([]byte("Book deleted successfully!"))
 
 	err = logs.LogWriter(r.Method, "/books/{bookID}", http.StatusOK)
 	if err != nil {
-		apierrors.PrintError(w, err, http.StatusInternalServerError)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 }

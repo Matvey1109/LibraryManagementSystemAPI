@@ -1,30 +1,37 @@
 document.addEventListener("DOMContentLoaded", function() {
     const endpoints = document.querySelectorAll(".endpoint");
 
-    const indexData = document.getElementById("indexData");
-    const fetchDataButton = document.getElementById("fetchDataButton");
+    const indexButton = document.getElementById("indexButton");
 
-    const getAllMembers = document.getElementById("getAllMembers");
-    const fetchDataButton2 = document.getElementById("fetchDataButton2");
+    const getAllMembersButton = document.getElementById("getAllMembersButton");
 
-    const memberIDInput = document.getElementById("memberIDInput");
-    const getMember = document.getElementById("getMember");
-    const fetchDataButton3 = document.getElementById("fetchDataButton3");
+    const getMemberInput = document.getElementById("getMemberInput");
+    const getMemberButton = document.getElementById("getMemberButton");
 
-    const memberDataInput = document.getElementById("memberDataInput");
-    const postMemberResponse = document.getElementById("postMemberResponse");
-    const postDataButton = document.getElementById("postDataButton");
+    const addMemberInput = document.getElementById("addMemberInput");
+    const addMemberButton = document.getElementById("addMemberButton");
 
     const updateMemberIDInput = document.getElementById("updateMemberIDInput");
     const updateMemberDataInput = document.getElementById("updateMemberDataInput");
-    const updateMemberResponse = document.getElementById("updateMemberResponse");
-    const updateDataButton = document.getElementById("updateDataButton");
+    const updateMemberButton = document.getElementById("updateMemberButton");
 
-    const deleteMemberForm = document.getElementById("deleteMemberForm");
-    const deleteMemberIDInput = document.getElementById("deleteMemberIDInput");
-    const deleteMemberResponse = document.getElementById("deleteMember");
-    const deleteDataButton = document.getElementById("deleteDataButton");
+    const deleteMemberInput = document.getElementById("deleteMemberInput");
+    const deleteMemberButton = document.getElementById("deleteMemberButton");
 
+    const getAllBooksButton = document.getElementById("getAllBooksButton");
+
+    const getBookInput = document.getElementById("getBookInput");
+    const getBookButton = document.getElementById("getBookButton");
+
+    const addBookInput = document.getElementById("addBookInput");
+    const addBookButton = document.getElementById("addBookButton");
+
+    const updateBookIDInput = document.getElementById("updateBookIDInput");
+    const updateBookDataInput = document.getElementById("updateBookDataInput");
+    const updateBookButton = document.getElementById("updateBookButton");
+
+    const deleteBookInput = document.getElementById("deleteBookInput");
+    const deleteBookButton = document.getElementById("deleteBookButton");
 
     endpoints.forEach(endpoint => {
       endpoint.querySelector("h3").addEventListener("click", function() {
@@ -32,102 +39,194 @@ document.addEventListener("DOMContentLoaded", function() {
       });
     });
 
-    function fetchData() {
-      fetch(`http://127.0.0.1:8080/`)
-        .then(response => response.text())
-        .then(data => {
-          indexData.textContent = data;
-        })
-        .catch(error => {
-          indexData.textContent = "Error fetching data: " + error;
+    function fetchData(url, method, body = null) {
+      return fetch(url, {
+        method,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body,
+      })
+        .then((response) => Promise.all([response.text(), response.status, response.statusText]))
+        .then(([data, status, statusText]) => ({ data, status, statusText }))
+        .catch((error) => ({ error }));
+    }
+
+    function updateElement(dataElementId, statusElementId, data, status, statusText) {
+      const dataElement = document.getElementById(dataElementId);
+      const statusElement = document.getElementById(statusElementId);
+      dataElement.textContent = `Data: ${data}`;
+      statusElement.textContent = `Status: ${status} (${statusText})`;
+      statusElement.setAttribute("data-status", status);
+    }
+
+    function indexFunc() {
+      fetchData("http://127.0.0.1:8080/", "GET")
+        .then(({ data, status, statusText, error }) => {
+          if (error) {
+            const indexDataElement = document.getElementById("indexData");
+            indexDataElement.textContent = "Error fetching data: " + error;
+          } else {
+            updateElement("dataIndexData", "statusIndexData", data, status, statusText);
+          }
         });
     }
 
-    function fetchData2() {
-      fetch(`http://127.0.0.1:8080/members`)
-        .then(response => response.text())
-        .then(data => {
-          getAllMembers.textContent = data;
-        })
-        .catch(error => {
-          getAllMembers.textContent = "Error fetching data: " + error;
+    // * Member
+    function getAllMembersFunc() {
+      fetchData("http://127.0.0.1:8080/members", "GET")
+        .then(({ data, status, statusText, error }) => {
+          if (error) {
+            const getAllMembersElement = document.getElementById("getAllMembers");
+            getAllMembersElement.textContent = "Error fetching data: " + error;
+          } else {
+            updateElement("dataGetAllMembers", "statusGetAllMembers", data, status, statusText);
+          }
         });
     }
 
-    function fetchData3() {
-      const memberID = memberIDInput.value;
+    function getMemberFunc() {
+      const memberID = getMemberInput.value;
       const url = `http://127.0.0.1:8080/members/${memberID}`;
-      fetch(url)
-        .then(response => response.text())
-        .then(data => {
-          getMember.textContent = data;
-        })
-        .catch(error => {
-          getMember.textContent = "Error fetching data: " + error;
+      fetchData(url, "GET")
+        .then(({ data, status, statusText, error }) => {
+          if (error) {
+            const getMemberElement = document.getElementById("getMember");
+            getMemberElement.textContent = "Error fetching data: " + error;
+          } else {
+            updateElement("dataGetMember", "statusGetMember", data, status, statusText);
+          }
         });
     }
 
-    function postData() {
-        const memberData = memberDataInput.value;
-        const url = "http://127.0.0.1:8080/members";
-
-        fetch(url, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: memberData
-        })
-        .then(response => response.text())
-        .then(data => {
-          postMemberResponse.textContent = data;
-        })
-        .catch(error => {
-          postMemberResponse.textContent = "Error posting data: " + error;
+    function addMemberFunc() {
+      const memberData = addMemberInput.value;
+      const url = "http://127.0.0.1:8080/members";
+      fetchData(url, "POST", memberData)
+        .then(({ data, status, statusText, error }) => {
+          if (error) {
+            const addMemberElement = document.getElementById("addMember");
+            addMemberElement.textContent = "Error fetching data: " + error;
+          } else {
+            updateElement("dataAddMember", "statusAddMember", data, status, statusText);
+          }
         });
     }
 
-    function updateData() {
+    function updateMemberFunc() {
         const memberID = updateMemberIDInput.value;
         const memberData = updateMemberDataInput.value;
         const url = `http://127.0.0.1:8080/members/${memberID}`;
 
-        fetch(url, {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: memberData
-        })
-          .then(response => response.text())
-          .then(data => {
-            updateMemberResponse.textContent = data;
-          })
-          .catch(error => {
-            updateMemberResponse.textContent = "Error updating data: " + error;
-          });
-    }
-
-    function deleteData() {
-      const memberID = deleteMemberIDInput.value;
-      const url = `http://127.0.0.1:8080/members/${memberID}`;
-
-      fetch(url, {
-        method: "DELETE",
-      })
-        .then(response => response.text())
-        .then(data => {
-          deleteMemberResponse.textContent = data;
-        })
-        .catch(error => {
-          deleteMemberResponse.textContent = "Error deleting data: " + error;
+        fetchData(url, "PUT", memberData)
+        .then(({ data, status, statusText, error }) => {
+          if (error) {
+            const updateMemberElement = document.getElementById("updateMember");
+            updateMemberElement.textContent = "Error fetching data: " + error;
+          } else {
+            updateElement("dataUpdateMember", "statusUpdateMember", data, status, statusText);
+          }
         });
     }
 
-    fetchDataButton.addEventListener("click", fetchData);
-    fetchDataButton2.addEventListener("click", fetchData2);
-    fetchDataButton3.addEventListener("click", fetchData3);
-    postDataButton.addEventListener("click", postData);
-    updateDataButton.addEventListener("click", updateData);
-    deleteDataButton.addEventListener("click", deleteData);
+    function deleteMemberFunc() {
+      const memberID = deleteMemberInput.value;
+      const url = `http://127.0.0.1:8080/members/${memberID}`;
+
+      fetchData(url, "DELETE")
+        .then(({ data, status, statusText, error }) => {
+          if (error) {
+            const deleteMemberElement = document.getElementById("deleteMember");
+            deleteMemberElement.textContent = "Error fetching data: " + error;
+          } else {
+            updateElement("dataDeleteMember", "statusDeleteMember", data, status, statusText);
+          }
+        });
+    }
+
+    // * Book
+    function getAllBooksFunc() {
+      fetchData("http://127.0.0.1:8080/books", "GET")
+        .then(({ data, status, statusText, error }) => {
+          if (error) {
+            const getAllBooksElement = document.getElementById("getAllBooks");
+            getAllBooksElement.textContent = "Error fetching data: " + error;
+          } else {
+            updateElement("dataGetAllBooks", "statusGetAllBooks", data, status, statusText);
+          }
+        });
+    }
+
+    function getBookFunc() {
+      const bookID = getBookInput.value;
+      const url = `http://127.0.0.1:8080/books/${bookID}`;
+
+      fetchData(url, "GET")
+      .then(({ data, status, statusText, error }) => {
+        if (error) {
+
+          const getBookElement = document.getElementById("getBook");
+          getBookElement.textContent = "Error fetching data: " + error;
+        } else {
+          updateElement("dataGetBook", "statusGetBook", data, status, statusText);
+        }
+      });
+    }
+
+    function addBookFunc() {
+      const bookData = addBookInput.value;
+      const url = "http://127.0.0.1:8080/books";
+      fetchData(url, "POST", bookData)
+        .then(({ data, status, statusText, error }) => {
+          if (error) {
+            const addBookElement = document.getElementById("addBook");
+            addBookElement.textContent = "Error fetching data: " + error;
+          } else {
+            updateElement("dataAddBook", "statusAddBook", data, status, statusText);
+          }
+        });
+    }
+
+    function updateBookFunc() {
+        const bookID = updateBookIDInput.value;
+        const bookData = updateBookDataInput.value;
+        const url = `http://127.0.0.1:8080/books/${bookID}`;
+
+        fetchData(url, "PUT", bookData)
+        .then(({ data, status, statusText, error }) => {
+          if (error) {
+            const updateBookElement = document.getElementById("updateBook");
+            updateBookElement.textContent = "Error fetching data: " + error;
+          } else {
+            updateElement("dataUpdateBook", "statusUpdateBook", data, status, statusText);
+          }
+        });
+    }
+
+    function deleteBookFunc() {
+      const bookID = deleteBookInput.value;
+      const url = `http://127.0.0.1:8080/books/${bookID}`;
+
+      fetchData(url, "DELETE")
+        .then(({ data, status, statusText, error }) => {
+          if (error) {
+            const deleteBookElement = document.getElementById("deleteBook");
+            deleteBookElement.textContent = "Error fetching data: " + error;
+          } else {
+            updateElement("dataDeleteBook", "statusDeleteBook", data, status, statusText);
+          }
+        });
+    }
+
+    indexButton.addEventListener("click", indexFunc);
+    getAllMembersButton.addEventListener("click", getAllMembersFunc);
+    getMemberButton.addEventListener("click", getMemberFunc);
+    addMemberButton.addEventListener("click", addMemberFunc);
+    updateMemberButton.addEventListener("click", updateMemberFunc);
+    deleteMemberButton.addEventListener("click", deleteMemberFunc);
+    getAllBooksButton.addEventListener("click", getAllBooksFunc);
+    getBookButton.addEventListener("click", getBookFunc);
+    addBookButton.addEventListener("click", addBookFunc);
+    updateBookButton.addEventListener("click", updateBookFunc);
+    deleteBookButton.addEventListener("click", deleteBookFunc);
 });

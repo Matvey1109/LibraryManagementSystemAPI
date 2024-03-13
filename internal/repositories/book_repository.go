@@ -41,33 +41,43 @@ func (br *BookRepository) AddBook(title string, author string, publicationYear i
 	return nil
 }
 
-func (br *BookRepository) UpdateBook(id string, title string, author string, publicationYear int, genre string, availableCopies int, totalCopies int) error {
+func (br *BookRepository) UpdateBook(id string, title *string, author *string, publicationYear *int, genre *string, availableCopies *int, totalCopies *int) error {
 	book, err := storage.GetBookStorage(id)
 	if err != nil {
 		return err
 	}
 
-	if availableCopies > totalCopies {
-		return errors.New("available copies cannot be greater than total copies")
+	if title != nil {
+		book.Title = *title
+	}
+	if author != nil {
+		book.Author = *author
+	}
+	if publicationYear != nil {
+		book.PublicationYear = *publicationYear
+	}
+	if genre != nil {
+		book.Genre = *genre
+	}
+	if availableCopies != nil {
+		if totalCopies != nil {
+			if *availableCopies > *totalCopies {
+				return errors.New("available copies cannot be greater than total copies")
+			}
+			book.TotalCopies = *totalCopies
+		} else {
+			if *availableCopies > book.TotalCopies {
+				return errors.New("available copies cannot be greater than total copies")
+			}
+		}
+		book.AvailableCopies = *availableCopies
+	}
+	if totalCopies != nil{
+		book.TotalCopies = *totalCopies
 	}
 
-	if title != "" {
-		book.Title = title
-	}
-	if author != "" {
-		book.Author = author
-	}
-	if publicationYear != -1 {
-		book.PublicationYear = publicationYear
-	}
-	if genre != "" {
-		book.Genre = genre
-	}
-	if availableCopies >= 0 {
-		book.AvailableCopies = availableCopies
-	}
-	if totalCopies >= 0 {
-		book.TotalCopies = totalCopies
+	if err != nil {
+		return err
 	}
 
 	err = storage.UpdateBookStorage(id, book)
