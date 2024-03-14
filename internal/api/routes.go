@@ -290,3 +290,104 @@ func (api *APIService) DeleteBookHandler(w http.ResponseWriter, r *http.Request,
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 }
+
+// * Borrowing
+func (api *APIService) GetAllBorrowingsHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+	borrowings, err := repository.GetAllBorrowings()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		logs.LogWriter(r.Method, "/borrowings", http.StatusInternalServerError)
+		return
+	}
+
+	jsonData, err := serializers.SerializeJsonData(borrowings)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		logs.LogWriter(r.Method, "/borrowings", http.StatusBadRequest)
+		return
+	}
+
+	w.Write(jsonData)
+
+	err = logs.LogWriter(r.Method, "/borrowings", http.StatusOK)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+}
+
+func (api *APIService) GetMemberBooksHanlder(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	id := ps.ByName("memberID")
+	books, err := repository.GetMemberBooks(id)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		logs.LogWriter(r.Method, "/borrowings/{memberID}", http.StatusBadRequest)
+		return
+	}
+
+	jsonData, err := serializers.SerializeJsonData(books)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		logs.LogWriter(r.Method, "/borrowings/{memberID}", http.StatusBadRequest)
+		return
+	}
+
+	w.Write(jsonData)
+
+	err = logs.LogWriter(r.Method, "/borrowings/{memberID}", http.StatusOK)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+}
+
+func (api *APIService) BorrowBookHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+	data, err := serializers.DeserializeJsonData(r)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		logs.LogWriter(r.Method, "/borrowings", http.StatusBadRequest)
+		return
+	}
+
+	var (
+		bookID, memberID string
+		borrowYear       int
+	)
+
+	bookID, memberID, borrowYear, err = serializers.ValidateAddBorrowingData(data)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		logs.LogWriter(r.Method, "/borrowings", http.StatusBadRequest)
+		return
+	}
+
+	err = repository.BorrowBook(bookID, memberID, borrowYear)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		logs.LogWriter(r.Method, "/borrowings", http.StatusBadRequest)
+		return
+	}
+
+	w.WriteHeader(http.StatusCreated)
+	w.Write([]byte("Book borrowed successfully!"))
+
+	err = logs.LogWriter(r.Method, "/borrowings", http.StatusCreated)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+}
+
+func (api *APIService) ReturnBookHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	id := ps.ByName("borrowingID")
+	err := repository.ReturnBook(id)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusNotFound)
+		logs.LogWriter(r.Method, "/borrowings/{borrowingID}", http.StatusNotFound)
+		return
+	}
+
+	w.Write([]byte("Book returned successfully!"))
+
+	err = logs.LogWriter(r.Method, "/borrowings/{borrowingID}", http.StatusOK)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+}

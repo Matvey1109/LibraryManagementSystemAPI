@@ -14,19 +14,23 @@ h1 {
 }
 .endpoint h3 {
     cursor: pointer;
-    color: #333;
+    color: black;
+    padding: 5px;
+    display: inline-block;
+    margin-top: 0;
 }
 .endpoint .details {
     display: none;
     padding-top: 10px;
 }
-.postmember-textarea {
+.postmember-textarea,
+.postborrowing-textarea {
     width: 280px;
     height: 80px;
 }
 .postbook-textarea {
     width: 280px;
-    height: 80px;
+    height: 110px;
 }
 
 .status {
@@ -44,26 +48,24 @@ h1 {
 
 .global-endpoints,
 .member-endpoints,
-.book-endpoints {
+.book-endpoints,
+.borrowing-endpoints {
     background-color: #f9f9f9;
     padding: 10px;
     margin-bottom: 20px;
 }
 
 .get-method {
-    background-color: #dff0d8;
+    background-color: lightskyblue;
 }
-
 .post-method {
-    background-color: #d9edf7;
+    background-color: lightgreen;
 }
-
 .put-method {
-    background-color: #fcf8e3;
+    background-color: sandybrown;
 }
-
 .delete-method {
-    background-color: #f2dede;
+    background-color:tomato;
 }
 
 .multiline {

@@ -256,3 +256,37 @@ func ValidateUpdateBookData(data map[string]interface{}) (*string, *string, *int
 
 	return title, author, publicationYear, genre, availableCopies, totalCopies, nil
 }
+
+func ValidateAddBorrowingData(data map[string]interface{}) (string, string, int, error) {
+	allowedKeys := map[string]bool{
+		"memberID":   false,
+		"bookID":     false,
+		"borrowYear": false,
+	}
+
+	if err := validateKeys(data, allowedKeys, true); err != nil {
+		return "", "", 0, err
+	}
+
+	var (
+		bookID, memberID string
+		borrowYear       int
+		err              error
+	)
+
+	for key := range data {
+		switch key {
+		case "bookID":
+			bookID, err = extractString(data, "bookID")
+		case "memberID":
+			memberID, err = extractString(data, "memberID")
+		case "borrowYear":
+			borrowYear, err = extractInt(data, "borrowYear")
+		}
+		if err != nil {
+			return "", "", 0, err
+		}
+	}
+
+	return bookID, memberID, borrowYear, nil
+}

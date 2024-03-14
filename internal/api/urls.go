@@ -28,6 +28,11 @@ func RegisterAPIEndpoints(apiservise *APIService) http.Handler {
 	router.PUT("/books/:bookID", apiservise.UpdateBookHandler)
 	router.DELETE("/books/:bookID", apiservise.DeleteBookHandler)
 
+	router.GET("/borrowings", apiservise.GetAllBorrowingsHandler)
+	router.GET("/borrowings/:memberID", apiservise.GetMemberBooksHanlder)
+	router.POST("/borrowings", apiservise.BorrowBookHandler)
+	router.PUT("/borrowings/:borrowingID", apiservise.ReturnBookHandler)
+
 	// Serve static files
 	fs := http.FileServer(http.Dir("internal/swagger/static"))
 	router.GET("/styles.css", func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {

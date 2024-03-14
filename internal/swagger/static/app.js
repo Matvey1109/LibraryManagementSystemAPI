@@ -33,6 +33,51 @@ document.addEventListener("DOMContentLoaded", function() {
     const deleteBookInput = document.getElementById("deleteBookInput");
     const deleteBookButton = document.getElementById("deleteBookButton");
 
+    const getAllBorrowingsButton = document.getElementById("getAllBorrowingsButton");
+
+    const getMemberBooksInput = document.getElementById("getMemberBooksInput");
+    const getMemberBooksButton = document.getElementById("getMemberBooksButton");
+
+    const borrowBookInput = document.getElementById("borrowBookInput");
+    const borrowBookButton = document.getElementById("borrowBookButton");
+
+    const returnBookInput = document.getElementById("returnBookInput");
+    const returnBookButton = document.getElementById("returnBookButton");
+
+    const infoButton = document.getElementById('showInfo');
+    const infoText = document.getElementById('infoText');
+
+    let isInfoShown = false;
+
+    function toggleInfo() {
+      if (isInfoShown) {
+        infoText.textContent = '';
+        isInfoShown = false;
+      } else {
+        const info = [
+          'GET \t/ - main page',
+          'GET \t/swagger - Swagger documentation',
+          'GET \t/members - retrieve all members',
+          'GET \t/members/{memberID} - retrieve a specific member',
+          'POST \t/members - add a new member',
+          'PUT \t/members/{memberID} - update a member',
+          'DELETE \t/members/{memberID} - delete a member',
+          'GET \t/books - retrieve all books',
+          'GET \t/books/{bookID} - retrieve a specific book',
+          'POST \t/books - add a new book',
+          'PUT \t/books/{bookID} - update a book',
+          'DELETE \t/books/{bookID} - delete a book',
+          'GET \t/borrowings - retrieve all borrowings',
+          'GET \t/borrowings/{memberID} - retrieve member\'s books',
+          'POST \t/borrowings - borrow a book',
+          'PUT \t/borrowings/{borrowingID} - return a book'
+        ];
+
+        infoText.textContent = info.join('\n');
+        isInfoShown = true;
+      }
+    }
+
     endpoints.forEach(endpoint => {
       endpoint.querySelector("h3").addEventListener("click", function() {
         this.nextElementSibling.classList.toggle("details");
@@ -164,7 +209,6 @@ document.addEventListener("DOMContentLoaded", function() {
       fetchData(url, "GET")
       .then(({ data, status, statusText, error }) => {
         if (error) {
-
           const getBookElement = document.getElementById("getBook");
           getBookElement.textContent = "Error fetching data: " + error;
         } else {
@@ -218,6 +262,67 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
+    // * Borrowing
+    function getAllBorrowingsFunc() {
+      fetchData("http://127.0.0.1:8080/borrowings", "GET")
+        .then(({ data, status, statusText, error }) => {
+          if (error) {
+            const getAllBorrowingsElement = document.getElementById("getAllBorrowings");
+            getAllBorrowingsElement.textContent = "Error fetching data: " + error;
+          } else {
+            updateElement("dataGetAllBorrowings", "statusGetAllBorrowings", data, status, statusText);
+          }
+        });
+    }
+
+    function getMemberBooksFunc() {
+      const memberID = getMemberBooksInput.value;
+      const url = `http://127.0.0.1:8080/borrowings/${memberID}`;
+
+      fetchData(url, "GET")
+      .then(({ data, status, statusText, error }) => {
+        if (error) {
+          const getMemberBooksElement = document.getElementById("getMemberBooks");
+          getMemberBooksElement.textContent = "Error fetching data: " + error;
+        } else {
+          updateElement("dataGetMemberBooks", "statusGetMemberBooks", data, status, statusText);
+        }
+      });
+    }
+
+    function borrowBookFunc() {
+      const borrowingData = borrowBookInput.value;
+      const url = "http://127.0.0.1:8080/borrowings";
+      fetchData(url, "POST", borrowingData)
+        .then(({ data, status, statusText, error }) => {
+          if (error) {
+            const borrowBookElement = document.getElementById("borrowBook");
+            borrowBookElement.textContent = "Error fetching data: " + error;
+          } else {
+            updateElement("dataBorrowBook", "statusBorrowBook", data, status, statusText);
+          }
+        });
+    }
+
+    function returnBookFunc() {
+      const borrowingID = returnBookInput.value;
+      const url = `http://127.0.0.1:8080/borrowings/${borrowingID}`;
+
+      fetchData(url, "PUT")
+      .then(({ data, status, statusText, error }) => {
+        if (error) {
+          const returnBookElement = document.getElementById("returnBook");
+          returnBookElement.textContent = "Error fetching data: " + error;
+        } else {
+          updateElement("dataReturnBook", "statusReturnBook", data, status, statusText);
+        }
+      });
+    }
+
+
+    infoButton.addEventListener('click', () => {
+      toggleInfo();
+    });
     indexButton.addEventListener("click", indexFunc);
     getAllMembersButton.addEventListener("click", getAllMembersFunc);
     getMemberButton.addEventListener("click", getMemberFunc);
@@ -229,4 +334,8 @@ document.addEventListener("DOMContentLoaded", function() {
     addBookButton.addEventListener("click", addBookFunc);
     updateBookButton.addEventListener("click", updateBookFunc);
     deleteBookButton.addEventListener("click", deleteBookFunc);
+    getAllBorrowingsButton.addEventListener("click", getAllBorrowingsFunc);
+    getMemberBooksButton.addEventListener("click", getMemberBooksFunc);
+    borrowBookButton.addEventListener("click", borrowBookFunc);
+    returnBookButton.addEventListener("click", returnBookFunc);
 });

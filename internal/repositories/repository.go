@@ -14,14 +14,19 @@ type Repository struct {
 	BorrowingRepository
 }
 
-func NewRepository() *Repository{
+func NewRepository() *Repository {
 	return &Repository{}
 }
 
 func GenerateID() string {
-	objectID := primitive.NewObjectID()
-	stringID := objectID.Hex()
-	return stringID
+	switch storage.(type) {
+	case *storages.LocalStorage:
+		objectID := primitive.NewObjectID()
+		stringID := objectID.Hex()
+		return stringID
+	default:
+		return ""
+	}
 }
 
 var (

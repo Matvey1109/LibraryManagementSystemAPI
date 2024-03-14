@@ -2,24 +2,23 @@ package repositories
 
 import (
 	"app/internal/models"
-	"log"
 	"time"
 )
 
 type BorrowingRepository struct{}
 
-func (br *BorrowingRepository) GetAllBorrowings() []models.Borrowing {
+func (br *BorrowingRepository) GetAllBorrowings() ([]models.Borrowing, error) {
 	borrowings, err := storage.GetAllBorrowingsStorage()
 	if err != nil {
-		log.Fatal(err)
+		return borrowings, err
 	}
-	return borrowings
+	return borrowings, nil
 }
 
-func (br *BorrowingRepository) GetMemberBooks(memberID string) []models.Book {
+func (br *BorrowingRepository) GetMemberBooks(memberID string) ([]models.Book, error) {
 	borrowings, err := storage.GetAllBorrowingsStorage()
 	if err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
 
 	memberBorrowings := make([]models.Borrowing, 0)
@@ -33,15 +32,15 @@ func (br *BorrowingRepository) GetMemberBooks(memberID string) []models.Book {
 	for _, borrowing := range memberBorrowings {
 		book, err := storage.GetBookStorage(borrowing.BookID)
 		if err != nil {
-			log.Fatal(err)
+			return nil, err
 		}
 		books = append(books, book)
 	}
 
-	return books
+	return books, nil
 }
 
-func (br *BorrowingRepository) BorrowBook(bookID string, memberID string, borrowYear int) {
+func (br *BorrowingRepository) BorrowBook(bookID string, memberID string, borrowYear int) error {
 	newID := GenerateID()
 	newBorrowing := models.Borrowing{
 		ID:         newID,
@@ -52,20 +51,22 @@ func (br *BorrowingRepository) BorrowBook(bookID string, memberID string, borrow
 	}
 	err := storage.AddBorrowingStorage(newBorrowing)
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
+	return nil
 }
 
-func (br *BorrowingRepository) ReturnBook(id string) {
+func (br *BorrowingRepository) ReturnBook(id string) error {
 	borrowing, err := storage.GetBorrowingStorage(id)
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 
 	borrowing.ReturnYear = time.Now().Year()
 
 	err = storage.UpdateBorrowingStorage(id, borrowing)
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
+	return nil
 }
