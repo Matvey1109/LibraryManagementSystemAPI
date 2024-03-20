@@ -12,8 +12,8 @@ import (
 var logFile *os.File
 
 func OpenLogFile() error {
-	_, _, pathToFile := loadenv.LoadEnv()
-	file, err := os.OpenFile(pathToFile, os.O_TRUNC|os.O_CREATE|os.O_WRONLY, 0644)
+	_, _, pathToLogFile := loadenv.LoadEnv()
+	file, err := os.OpenFile(pathToLogFile, os.O_TRUNC|os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
 		return fmt.Errorf("failed to open log file: %w", err)
 	}

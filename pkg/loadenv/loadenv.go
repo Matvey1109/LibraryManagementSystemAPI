@@ -14,7 +14,7 @@ func LoadEnv() (string, string, string) {
 
 	typeOfStorage := os.Getenv("typeOfStorage")
 	port := os.Getenv("port")
-	pathToFile := os.Getenv("pathToFile")
+	pathToLogFile := os.Getenv("pathToLogFile")
 
-	return typeOfStorage, port, pathToFile
+	return typeOfStorage, port, pathToLogFile
 }

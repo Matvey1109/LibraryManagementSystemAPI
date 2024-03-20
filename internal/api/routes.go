@@ -21,8 +21,8 @@ func (api *APIService) Index(w http.ResponseWriter, r *http.Request, _ httproute
 func (api *APIService) GetAllMembersHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	members, err := repository.GetAllMembers()
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		logs.LogWriter(r.Method, "/members", http.StatusInternalServerError)
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		logs.LogWriter(r.Method, "/members", http.StatusBadRequest)
 		return
 	}
 
@@ -157,8 +157,8 @@ func (api *APIService) DeleteMemberHandler(w http.ResponseWriter, r *http.Reques
 func (api *APIService) GetAllBooksHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	books, err := repository.GetAllBooks()
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		logs.LogWriter(r.Method, "/books", http.StatusInternalServerError)
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		logs.LogWriter(r.Method, "/books", http.StatusBadRequest)
 		return
 	}
 
@@ -295,8 +295,8 @@ func (api *APIService) DeleteBookHandler(w http.ResponseWriter, r *http.Request,
 func (api *APIService) GetAllBorrowingsHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	borrowings, err := repository.GetAllBorrowings()
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		logs.LogWriter(r.Method, "/borrowings", http.StatusInternalServerError)
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		logs.LogWriter(r.Method, "/borrowings", http.StatusBadRequest)
 		return
 	}
 
