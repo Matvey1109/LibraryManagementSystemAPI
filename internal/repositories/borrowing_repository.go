@@ -2,6 +2,7 @@ package repositories
 
 import (
 	"app/internal/models"
+	"errors"
 	"time"
 )
 
@@ -41,6 +42,10 @@ func (br *BorrowingRepository) GetMemberBooks(memberID string) ([]models.Book, e
 }
 
 func (br *BorrowingRepository) BorrowBook(bookID string, memberID string, borrowYear int) error {
+	if borrowYear > time.Now().Year() {
+		return errors.New("invalid year")
+	}
+
 	newID := GenerateID()
 	newBorrowing := models.Borrowing{
 		ID:         newID,

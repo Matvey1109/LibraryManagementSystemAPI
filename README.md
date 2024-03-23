@@ -89,14 +89,14 @@ MemberRepository:
 - GetAllMembers(): Возвращает список всех читателей.
 - GetMember(id string): Возвращает информацию о конкретном читателе.
 - AddMember(name string, address string, email string): Добавляет нового читателя в библиотеку.
-- UpdateMember(id string, name string, address string, email string): Обновляет информацию о читателе.
+- UpdateMember(id string, name *string, address *string, email *string): Обновляет информацию о читателе.
 - DeleteMember(id string): Удаляет читателя.
 
 BookRepository:
 - GetAllBooks(): Возвращает список всех книг.
 - GetBook(id string): Возвращает информацию о конкретной книге.
 - AddBook(title string, author string, publicationYear int, genre string, totalCopies int): Добавляет новую книгу в библиотеку.
-- UpdateBook(id string, title string, author string, publicationYear int, genre string, availableCopies int, totalCopies int): Обновляет информацию о книге.
+- UpdateBook(id *string, title *string, author *string, publicationYear *int, genre *string, availableCopies *int, totalCopies *int): Обновляет информацию о книге.
 - DeleteBook(id string): Удаляет книгу из библиотеки.
 
 BookRepository:
@@ -139,7 +139,7 @@ Member:
 
 ## 3.4. Дополнительные функции:
 - RegisterAPIEndpoints(apiService *APIService): Регистрирует обработчики API-запросов для сервиса.
-- StartServer(router *httprouter.Router): Запускает сервер.
+- StartServer(handler http.Handler): Запускает сервер.
 
 ## 4. Общая структура проекта:
 ![Architecture](screenshots/Architecture.png)

@@ -25,12 +25,13 @@ func (mr *MemberRepository) GetMember(id string) (models.Member, error) {
 
 func (mr *MemberRepository) AddMember(name string, address string, email string) error {
 	newID := GenerateID()
+	curTime, _ := time.Parse(time.DateTime, time.Now().Format(time.DateTime))
 	newMember := models.Member{
 		ID:        newID,
 		Name:      name,
 		Address:   address,
 		Email:     email,
-		CreatedAt: time.Now(),
+		CreatedAt: curTime,
 	}
 	err := storage.AddMemberStorage(newMember)
 	if err != nil {
