@@ -9,3 +9,7 @@ type Book struct {
 	AvailableCopies int    `json:"availableCopies"`
 	TotalCopies     int    `json:"totalCopies"`
 }
+
+func (b *Book) GetBookID() string {
+	return b.ID
+}

@@ -1,13 +1,15 @@
 package main
 
 import (
-	"app/internal/api"
-	"app/pkg/logs"
+	"app/internal/console"
 )
 
 func main() {
-	defer logs.CloseLogFile()
-	apiservise := api.NewAPIService()
-	handler := api.RegisterAPIEndpoints(apiservise)
-	api.StartServer(handler)
+	// defer logs.CloseLogFile()
+	// apiservise := api.NewAPIService()
+	// handler := api.RegisterAPIEndpoints(apiservise)
+	// api.StartServer(handler)
+	console.TestMember()
+	console.TestBook()
+	console.TestBorrowing()
 }
