@@ -1,7 +1,7 @@
 package main
 
 import (
-	"app/internal/console"
+	"github.com/Matvey1109/LibraryManagementSystemAPI/internal/console"
 )
 
 func main() {

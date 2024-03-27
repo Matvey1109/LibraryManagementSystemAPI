@@ -1,4 +1,4 @@
-module app
+module github.com/Matvey1109/LibraryManagementSystemAPI
 
 go 1.21.3
 
@@ -8,3 +8,5 @@ require (
 	github.com/rs/cors v1.10.1
 	go.mongodb.org/mongo-driver v1.14.0
 )
+
+require github.com/Matvey1109/LibraryManagementSystemSerializers v0.0.0-20240327114433-11da57b1eaf9

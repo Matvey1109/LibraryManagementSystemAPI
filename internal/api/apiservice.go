@@ -1,7 +1,7 @@
 package api
 
 import (
-	"app/internal/repositories"
+	"github.com/Matvey1109/LibraryManagementSystemAPI/internal/repositories"
 )
 
 type APIService struct{}

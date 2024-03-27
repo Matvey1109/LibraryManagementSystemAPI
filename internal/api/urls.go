@@ -1,10 +1,11 @@
 package api
 
 import (
-	"app/internal/swagger"
-	"app/pkg/loadenv"
-	"app/pkg/logs"
 	"net/http"
+
+	"github.com/Matvey1109/LibraryManagementSystemAPI/internal/swagger"
+	"github.com/Matvey1109/LibraryManagementSystemAPI/pkg/loadenv"
+	"github.com/Matvey1109/LibraryManagementSystemAPI/pkg/logs"
 
 	"github.com/julienschmidt/httprouter"
 	"github.com/rs/cors"

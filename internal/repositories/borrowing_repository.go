@@ -1,9 +1,10 @@
 package repositories
 
 import (
-	"app/internal/models"
 	"errors"
 	"time"
+
+	"github.com/Matvey1109/LibraryManagementSystemAPI/internal/models"
 )
 
 type BorrowingRepository struct{}

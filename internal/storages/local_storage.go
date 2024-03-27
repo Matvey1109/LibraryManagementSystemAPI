@@ -1,8 +1,9 @@
 package storages
 
 import (
-	"app/internal/models"
 	"errors"
+
+	"github.com/Matvey1109/LibraryManagementSystemAPI/internal/models"
 )
 
 // ! Implements interface Storage

@@ -1,8 +1,9 @@
 package repositories
 
 import (
-	"app/internal/models"
 	"errors"
+
+	"github.com/Matvey1109/LibraryManagementSystemAPI/internal/models"
 )
 
 type BookRepository struct{}
@@ -72,7 +73,7 @@ func (br *BookRepository) UpdateBook(id string, title *string, author *string, p
 		}
 		book.AvailableCopies = *availableCopies
 	}
-	if totalCopies != nil{
+	if totalCopies != nil {
 		book.TotalCopies = *totalCopies
 	}
 

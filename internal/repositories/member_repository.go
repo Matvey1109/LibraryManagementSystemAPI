@@ -1,8 +1,9 @@
 package repositories
 
 import (
-	"app/internal/models"
 	"time"
+
+	"github.com/Matvey1109/LibraryManagementSystemAPI/internal/models"
 )
 
 type MemberRepository struct{}

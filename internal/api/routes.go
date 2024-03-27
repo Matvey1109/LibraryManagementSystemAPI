@@ -1,10 +1,12 @@
 package api
 
 import (
-	"app/internal/serializers"
-	"app/pkg/logs"
 	"net/http"
 
+	"github.com/Matvey1109/LibraryManagementSystemAPI/pkg/logs"
+
+	"github.com/Matvey1109/LibraryManagementSystemSerializers/serializers"
+	"github.com/Matvey1109/LibraryManagementSystemSerializers/serializers/json_serializers"
 	"github.com/julienschmidt/httprouter"
 )
 
@@ -26,7 +28,7 @@ func (api *APIService) GetAllMembersHandler(w http.ResponseWriter, r *http.Reque
 		return
 	}
 
-	jsonData, err := serializers.SerializeJsonData(members)
+	jsonData, err := json_serializers.SerializeJsonData(members)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		logs.LogWriter(r.Method, "/members", http.StatusBadRequest)
@@ -50,7 +52,7 @@ func (api *APIService) GetMemberHandler(w http.ResponseWriter, r *http.Request, 
 		return
 	}
 
-	jsonData, err := serializers.SerializeJsonData(member)
+	jsonData, err := json_serializers.SerializeJsonData(member)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		logs.LogWriter(r.Method, "/members/{memberID}", http.StatusBadRequest)
@@ -66,7 +68,7 @@ func (api *APIService) GetMemberHandler(w http.ResponseWriter, r *http.Request, 
 }
 
 func (api *APIService) AddMemberHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-	data, err := serializers.DeserializeJsonData(r)
+	data, err := json_serializers.DeserializeJsonData(r)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		logs.LogWriter(r.Method, "/members", http.StatusBadRequest)
@@ -103,7 +105,7 @@ func (api *APIService) AddMemberHandler(w http.ResponseWriter, r *http.Request, 
 func (api *APIService) UpdateMemberHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	id := ps.ByName("memberID")
 
-	data, err := serializers.DeserializeJsonData(r)
+	data, err := json_serializers.DeserializeJsonData(r)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		logs.LogWriter(r.Method, "/members/{memberID}", http.StatusBadRequest)
@@ -162,7 +164,7 @@ func (api *APIService) GetAllBooksHandler(w http.ResponseWriter, r *http.Request
 		return
 	}
 
-	jsonData, err := serializers.SerializeJsonData(books)
+	jsonData, err := json_serializers.SerializeJsonData(books)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		logs.LogWriter(r.Method, "/books", http.StatusBadRequest)
@@ -186,7 +188,7 @@ func (api *APIService) GetBookHandler(w http.ResponseWriter, r *http.Request, ps
 		return
 	}
 
-	jsonData, err := serializers.SerializeJsonData(book)
+	jsonData, err := json_serializers.SerializeJsonData(book)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		logs.LogWriter(r.Method, "/books/{bookID}", http.StatusBadRequest)
@@ -202,7 +204,7 @@ func (api *APIService) GetBookHandler(w http.ResponseWriter, r *http.Request, ps
 }
 
 func (api *APIService) AddBookHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-	data, err := serializers.DeserializeJsonData(r)
+	data, err := json_serializers.DeserializeJsonData(r)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		logs.LogWriter(r.Method, "/books", http.StatusBadRequest)
@@ -240,7 +242,7 @@ func (api *APIService) AddBookHandler(w http.ResponseWriter, r *http.Request, _ 
 func (api *APIService) UpdateBookHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	id := ps.ByName("bookID")
 
-	data, err := serializers.DeserializeJsonData(r)
+	data, err := json_serializers.DeserializeJsonData(r)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		logs.LogWriter(r.Method, "/books/{bookID}", http.StatusBadRequest)
@@ -300,7 +302,7 @@ func (api *APIService) GetAllBorrowingsHandler(w http.ResponseWriter, r *http.Re
 		return
 	}
 
-	jsonData, err := serializers.SerializeJsonData(borrowings)
+	jsonData, err := json_serializers.SerializeJsonData(borrowings)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		logs.LogWriter(r.Method, "/borrowings", http.StatusBadRequest)
@@ -324,7 +326,7 @@ func (api *APIService) GetMemberBooksHanlder(w http.ResponseWriter, r *http.Requ
 		return
 	}
 
-	jsonData, err := serializers.SerializeJsonData(books)
+	jsonData, err := json_serializers.SerializeJsonData(books)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		logs.LogWriter(r.Method, "/borrowings/{memberID}", http.StatusBadRequest)
@@ -340,7 +342,7 @@ func (api *APIService) GetMemberBooksHanlder(w http.ResponseWriter, r *http.Requ
 }
 
 func (api *APIService) BorrowBookHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-	data, err := serializers.DeserializeJsonData(r)
+	data, err := json_serializers.DeserializeJsonData(r)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		logs.LogWriter(r.Method, "/borrowings", http.StatusBadRequest)

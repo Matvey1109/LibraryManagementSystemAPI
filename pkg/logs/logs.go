@@ -1,12 +1,13 @@
 package logs
 
 import (
-	"app/pkg/loadenv"
 	"errors"
 	"fmt"
 	"log"
 	"os"
 	"time"
+
+	"github.com/Matvey1109/LibraryManagementSystemAPI/pkg/loadenv"
 )
 
 var logFile *os.File

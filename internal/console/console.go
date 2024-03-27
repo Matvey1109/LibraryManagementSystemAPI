@@ -1,9 +1,10 @@
 package console
 
 import (
-	"app/internal/repositories"
 	"fmt"
 	"log"
+
+	"github.com/Matvey1109/LibraryManagementSystemAPI/internal/repositories"
 )
 
 func TestMember() {

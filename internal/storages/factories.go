@@ -1,9 +1,10 @@
 package storages
 
 import (
-	"app/internal/models"
-	"app/pkg/loadenv"
 	"errors"
+
+	"github.com/Matvey1109/LibraryManagementSystemAPI/internal/models"
+	"github.com/Matvey1109/LibraryManagementSystemAPI/pkg/loadenv"
 )
 
 // ! Abstract Factory

@@ -9,6 +9,9 @@ exec:
 run:
 	go run cmd/main/main.go
 
+test:
+	go test -v ./internal/tests
+
 clear:
 	rm -rf bin
 
@@ -18,4 +21,5 @@ help:
 	@echo "build  -  Builds the project"
 	@echo "exec   -  Executes the built binary"
 	@echo "run    -  Runs project using 'go run'"
+	@echo "test   -  Test project"
 	@echo "clear  -  Cleans the build directory (bin)"
