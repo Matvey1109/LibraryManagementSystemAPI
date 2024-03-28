@@ -9,4 +9,4 @@ require (
 	go.mongodb.org/mongo-driver v1.14.0
 )
 
-require github.com/Matvey1109/LibraryManagementSystemSerializers v0.0.0-20240327114433-11da57b1eaf9
+require github.com/Matvey1109/LibraryManagementSystemSerializers v0.0.0-20240328081433-ca5adfd4395e

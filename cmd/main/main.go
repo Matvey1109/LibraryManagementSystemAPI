@@ -1,15 +1,13 @@
 package main
 
 import (
-	"github.com/Matvey1109/LibraryManagementSystemAPI/internal/console"
+	"github.com/Matvey1109/LibraryManagementSystemAPI/internal/api"
+	"github.com/Matvey1109/LibraryManagementSystemAPI/pkg/logs"
 )
 
 func main() {
-	// defer logs.CloseLogFile()
-	// apiservise := api.NewAPIService()
-	// handler := api.RegisterAPIEndpoints(apiservise)
-	// api.StartServer(handler)
-	console.TestMember()
-	console.TestBook()
-	console.TestBorrowing()
+	defer logs.CloseLogFile()
+	apiservise := api.NewAPIService()
+	handler := api.RegisterAPIEndpoints(apiservise)
+	api.StartServer(handler)
 }
