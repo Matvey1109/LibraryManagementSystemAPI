@@ -1,3 +1,4 @@
 .env
 bin
 logs
+mongo_data

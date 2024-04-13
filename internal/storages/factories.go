@@ -1,10 +1,14 @@
 package storages
 
 import (
+	"context"
 	"errors"
+	"fmt"
 
 	"github.com/Matvey1109/LibraryManagementSystemAPI/internal/models"
 	"github.com/Matvey1109/LibraryManagementSystemAPI/pkg/loadenv"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 // ! Abstract Factory
@@ -19,6 +23,10 @@ func GetStorageFactory() (StorageFactory, error) {
 		return &LocalStorageFactory{}, nil
 	}
 
+	if typeOfStorage == "mongodb" {
+		return &MongoDBStorageFactory{}, nil
+	}
+
 	return nil, errors.New("typeOfStorage not found")
 }
 
@@ -30,6 +38,33 @@ func (f *LocalStorageFactory) CreateStorage() (Storage, error) {
 		members:    []models.Member{},
 		books:      []models.Book{},
 		borrowings: []models.Borrowing{},
+	}, nil
+}
+
+type MongoDBStorageFactory struct{} // * Implements interface StorageFactory
+
+func (f *MongoDBStorageFactory) CreateStorage() (Storage, error) {
+	uri := "mongodb://root:example@127.0.0.1:27016"
+
+	client, err := mongo.Connect(context.TODO(), options.Client().ApplyURI(uri))
+	if err != nil {
+		return nil, err
+	}
+
+	if err := client.Ping(context.TODO(), nil); err != nil {
+		return nil, fmt.Errorf("failed to ping MongoDB: %w", err)
+	}
+
+	database := client.Database("mydatabase")
+	membersCollection := database.Collection("members")
+	booksCollection := database.Collection("books")
+	borrowingsCollection := database.Collection("borrowings")
+
+	return &MongoDBStorage{
+		client:               client,
+		membersCollection:    membersCollection,
+		booksCollection:      booksCollection,
+		borrowingsCollection: borrowingsCollection,
 	}, nil
 }
 

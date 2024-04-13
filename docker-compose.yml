@@ -1,0 +1,16 @@
+version: '3.5'
+
+services:
+  mongodb:
+    image: mongo
+    container_name: mongodb
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+    volumes:
+      - "./mongo_data:/data/db"
+    ports:
+      - 27016:27017
+
+# docker-compose up -d
