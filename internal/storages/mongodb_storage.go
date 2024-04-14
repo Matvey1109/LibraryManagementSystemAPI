@@ -3,7 +3,6 @@ package storages
 import (
 	"context"
 	"errors"
-	"fmt"
 	"time"
 
 	"github.com/Matvey1109/LibraryManagementSystemAPI/internal/models"
@@ -41,6 +40,7 @@ func (ms *MongoDBStorage) GetAllMembersStorage() ([]models.Member, error) {
 		if err != nil {
 			return nil, err
 		}
+
 		for key, value := range mongoMemberMap {
 			if key == "_id" {
 				member.ID = value.(primitive.ObjectID).Hex()
@@ -66,6 +66,7 @@ func (ms *MongoDBStorage) GetMemberStorage(id string) (models.Member, error) {
 	if err != nil {
 		return member, err
 	}
+
 	filter := bson.M{"_id": objectID}
 	err = ms.membersCollection.FindOne(context.Background(), filter).Decode(&member)
 	if err != nil {
@@ -75,6 +76,7 @@ func (ms *MongoDBStorage) GetMemberStorage(id string) (models.Member, error) {
 		return member, err
 	}
 	member.ID = id
+
 	return member, nil
 }
 
@@ -85,22 +87,96 @@ func (ms *MongoDBStorage) AddMemberStorage(member models.Member) error {
 		{Key: "email", Value: member.Email},
 		{Key: "createdAt", Value: member.CreatedAt},
 	}
-	fmt.Println(member.CreatedAt)
 	_, err := ms.membersCollection.InsertOne(context.Background(), newMember)
 	return err
 }
 
 func (ms *MongoDBStorage) UpdateMemberStorage(id string, member models.Member) error {
+	objectID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return err
+	}
+
+	filter := bson.M{"_id": objectID}
+	updatedMember := bson.D{
+		{Key: "name", Value: member.Name},
+		{Key: "address", Value: member.Address},
+		{Key: "email", Value: member.Email},
+	}
+
+	_, err = ms.membersCollection.UpdateOne(context.Background(), filter, bson.D{{Key: "$set", Value: updatedMember}})
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
 func (ms *MongoDBStorage) DeleteMemberStorage(id string) error {
+	objectID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return err
+	}
+
+	filter := bson.M{"_id": objectID}
+	result, err := ms.membersCollection.DeleteOne(context.Background(), filter)
+	if err != nil {
+		return err
+	}
+
+	if result.DeletedCount == 0 {
+		return errors.New("member not found")
+	}
+
 	return nil
 }
 
 // * Book
 func (ms *MongoDBStorage) GetAllBooksStorage() ([]models.Book, error) {
-	return nil, nil
+	cursor, err := ms.booksCollection.Find(context.Background(), bson.M{})
+	if err != nil {
+		return nil, err
+	}
+	defer cursor.Close(context.Background())
+
+	var books []models.Book
+	for cursor.Next(context.Background()) {
+		var (
+			mongoBookMap map[string]interface{}
+			book         models.Book
+		)
+
+		err := cursor.Decode(&mongoBookMap)
+		if err != nil {
+			return nil, err
+		}
+
+		for key, value := range mongoBookMap {
+			if key == "_id" {
+				book.ID = value.(primitive.ObjectID).Hex()
+			} else if key == "title" {
+				book.Title = value.(string)
+			} else if key == "author" {
+				book.Author = value.(string)
+			} else if key == "publicationYear" {
+				if value, ok := value.(int32); ok {
+					book.PublicationYear = int(value)
+				}
+			} else if key == "genre" {
+				book.Genre = value.(string)
+			} else if key == "availableCopies" {
+				if value, ok := value.(int32); ok {
+					book.AvailableCopies = int(value)
+				}
+			} else if key == "totalCopies" {
+				if value, ok := value.(int32); ok {
+					book.TotalCopies = int(value)
+				}
+			}
+		}
+		books = append(books, book)
+	}
+	return books, nil
 }
 
 func (ms *MongoDBStorage) GetBookStorage(id string) (models.Book, error) {
@@ -108,7 +184,16 @@ func (ms *MongoDBStorage) GetBookStorage(id string) (models.Book, error) {
 }
 
 func (ms *MongoDBStorage) AddBookStorage(book models.Book) error {
-	return nil
+	newBook := bson.D{
+		{Key: "title", Value: book.Title},
+		{Key: "author", Value: book.Author},
+		{Key: "publicationYear", Value: book.PublicationYear},
+		{Key: "genre", Value: book.Genre},
+		{Key: "availableCopies", Value: book.AvailableCopies},
+		{Key: "totalCopies", Value: book.TotalCopies},
+	}
+	_, err := ms.booksCollection.InsertOne(context.Background(), newBook)
+	return err
 }
 
 func (ms *MongoDBStorage) UpdateBookStorage(id string, book models.Book) error {
