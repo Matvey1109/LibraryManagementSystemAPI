@@ -180,7 +180,23 @@ func (ms *MongoDBStorage) GetAllBooksStorage() ([]models.Book, error) {
 }
 
 func (ms *MongoDBStorage) GetBookStorage(id string) (models.Book, error) {
-	return models.Book{}, nil
+	var book models.Book
+	objectID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return book, err
+	}
+
+	filter := bson.M{"_id": objectID}
+	err = ms.booksCollection.FindOne(context.Background(), filter).Decode(&book)
+	if err != nil {
+		if err == mongo.ErrNoDocuments {
+			return book, errors.New("book not found")
+		}
+		return book, err
+	}
+	book.ID = id
+
+	return book, nil
 }
 
 func (ms *MongoDBStorage) AddBookStorage(book models.Book) error {
@@ -197,30 +213,158 @@ func (ms *MongoDBStorage) AddBookStorage(book models.Book) error {
 }
 
 func (ms *MongoDBStorage) UpdateBookStorage(id string, book models.Book) error {
+	objectID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return err
+	}
+
+	filter := bson.M{"_id": objectID}
+	updatedBook := bson.D{
+		{Key: "title", Value: book.Title},
+		{Key: "author", Value: book.Author},
+		{Key: "publicationYear", Value: book.PublicationYear},
+		{Key: "genre", Value: book.Genre},
+		{Key: "availableCopies", Value: book.AvailableCopies},
+		{Key: "totalCopies", Value: book.TotalCopies},
+	}
+
+	_, err = ms.booksCollection.UpdateOne(context.Background(), filter, bson.D{{Key: "$set", Value: updatedBook}})
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
 func (ms *MongoDBStorage) DeleteBookStorage(id string) error {
+	objectID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return err
+	}
+
+	filter := bson.M{"_id": objectID}
+	result, err := ms.booksCollection.DeleteOne(context.Background(), filter)
+	if err != nil {
+		return err
+	}
+
+	if result.DeletedCount == 0 {
+		return errors.New("book not found")
+	}
+
 	return nil
 }
 
 // * Borrowing
 func (ms *MongoDBStorage) GetAllBorrowingsStorage() ([]models.Borrowing, error) {
-	return nil, nil
+	cursor, err := ms.borrowingsCollection.Find(context.Background(), bson.M{})
+	if err != nil {
+		return nil, err
+	}
+	defer cursor.Close(context.Background())
+
+	var borrowings []models.Borrowing
+	for cursor.Next(context.Background()) {
+		var (
+			mongoBorrowingMap map[string]interface{}
+			borrowing         models.Borrowing
+		)
+
+		err := cursor.Decode(&mongoBorrowingMap)
+		if err != nil {
+			return nil, err
+		}
+
+		for key, value := range mongoBorrowingMap {
+			if key == "_id" {
+				borrowing.ID = value.(primitive.ObjectID).Hex()
+			} else if key == "bookId" {
+				borrowing.BookID = value.(string)
+			} else if key == "memberId" {
+				borrowing.MemberID = value.(string)
+			} else if key == "borrowYear" {
+				if value, ok := value.(int32); ok {
+					borrowing.BorrowYear = int(value)
+				}
+			} else if key == "returnYear" {
+				if value, ok := value.(int32); ok {
+					borrowing.ReturnYear = int(value)
+				}
+			}
+		}
+		borrowings = append(borrowings, borrowing)
+	}
+	return borrowings, nil
 }
 
 func (ms *MongoDBStorage) GetBorrowingStorage(id string) (models.Borrowing, error) {
-	return models.Borrowing{}, nil
+	var borrowing models.Borrowing
+	objectID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return borrowing, err
+	}
+
+	filter := bson.M{"_id": objectID}
+	err = ms.borrowingsCollection.FindOne(context.Background(), filter).Decode(&borrowing)
+	if err != nil {
+		if err == mongo.ErrNoDocuments {
+			return borrowing, errors.New("borrowing not found")
+		}
+		return borrowing, err
+	}
+	borrowing.ID = id
+
+	return borrowing, nil
 }
 
 func (ms *MongoDBStorage) AddBorrowingStorage(borrowing models.Borrowing) error {
-	return nil
+	newBorrowing := bson.D{
+		{Key: "bookId", Value: borrowing.BookID},
+		{Key: "memberId", Value: borrowing.MemberID},
+		{Key: "borrowYear", Value: borrowing.BorrowYear},
+		{Key: "returnYear", Value: borrowing.ReturnYear},
+	}
+	_, err := ms.borrowingsCollection.InsertOne(context.Background(), newBorrowing)
+	return err
 }
 
 func (ms *MongoDBStorage) UpdateBorrowingStorage(id string, borrowing models.Borrowing) error {
+	objectID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return err
+	}
+
+	filter := bson.M{"_id": objectID}
+	updatedBorrowing := bson.D{
+		{Key: "bookId", Value: borrowing.BookID},
+		{Key: "memberId", Value: borrowing.MemberID},
+		{Key: "borrowYear", Value: borrowing.BorrowYear},
+		{Key: "returnYear", Value: borrowing.ReturnYear},
+	}
+
+	_, err = ms.borrowingsCollection.UpdateOne(context.Background(), filter, bson.D{{Key: "$set", Value: updatedBorrowing}})
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
 func (ms *MongoDBStorage) DeleteBorrowingStorage(id string) error {
+	objectID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return err
+	}
+
+	filter := bson.M{"_id": objectID}
+	result, err := ms.borrowingsCollection.DeleteOne(context.Background(), filter)
+	if err != nil {
+		return err
+	}
+
+	if result.DeletedCount == 0 {
+		return errors.New("borrowing not found")
+	}
+
 	return nil
 }

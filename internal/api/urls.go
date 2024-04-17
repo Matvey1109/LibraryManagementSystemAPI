@@ -54,6 +54,6 @@ func RegisterAPIEndpoints(apiservise *APIService) http.Handler {
 
 func StartServer(handler http.Handler) {
 	logs.LogWriter("", "", 0)
-	_, port, _ := loadenv.LoadEnv()
+	_, port, _ := loadenv.LoadGlobalEnv()
 	http.ListenAndServe(port, handler)
 }

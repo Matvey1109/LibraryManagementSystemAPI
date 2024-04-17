@@ -17,7 +17,7 @@ type StorageFactory interface {
 }
 
 func GetStorageFactory() (StorageFactory, error) {
-	typeOfStorage, _, _ := loadenv.LoadEnv()
+	typeOfStorage, _, _ := loadenv.LoadGlobalEnv()
 
 	if typeOfStorage == "local" {
 		return &LocalStorageFactory{}, nil
@@ -44,7 +44,8 @@ func (f *LocalStorageFactory) CreateStorage() (Storage, error) {
 type MongoDBStorageFactory struct{} // * Implements interface StorageFactory
 
 func (f *MongoDBStorageFactory) CreateStorage() (Storage, error) {
-	uri := "mongodb://root:example@127.0.0.1:27016"
+	MONGO_INITDB_ROOT_USERNAME, MONGO_INITDB_ROOT_PASSWORD := loadenv.LoadMongoEnv()
+	uri := fmt.Sprintf("mongodb://%s:%s@mongo:27017/", MONGO_INITDB_ROOT_USERNAME, MONGO_INITDB_ROOT_PASSWORD)
 
 	client, err := mongo.Connect(context.TODO(), options.Client().ApplyURI(uri))
 	if err != nil {
