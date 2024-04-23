@@ -15,6 +15,9 @@ test:
 clear:
 	rm -rf bin
 
+dock:
+	docker compose up -d
+
 help:
 	@echo "Available commands:"
 	@echo "all    -  Builds and then executes the project"
@@ -23,3 +26,4 @@ help:
 	@echo "run    -  Runs project using 'go run'"
 	@echo "test   -  Test project"
 	@echo "clear  -  Cleans the build directory (bin)"
+	@echo "dock   -  Dockerize app and run"
