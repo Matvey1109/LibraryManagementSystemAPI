@@ -3,7 +3,7 @@ package xml_serializers
 import (
 	"encoding/xml"
 
-	"github.com/Matvey1109/LibraryManagementSystemAPI/internal/schemas"
+	"github.com/Matvey1109/LibraryManagementSystemCore/core/models"
 )
 
 type BorrowingXML struct {
@@ -15,7 +15,7 @@ type BorrowingXML struct {
 	ReturnYear int      `xml:"returnYear"`
 }
 
-func SerializeBorrowingToXML(book schemas.Borrowing) ([]byte, error) {
+func SerializeBorrowingToXML(book models.Borrowing) ([]byte, error) {
 	borrowingXML := BorrowingXML{
 		ID:         book.ID,
 		BookID:     book.BookID,
@@ -32,13 +32,13 @@ func SerializeBorrowingToXML(book schemas.Borrowing) ([]byte, error) {
 	return data, nil
 }
 
-func DeserializeBorrowingFromXML(data []byte) (schemas.Borrowing, error) {
+func DeserializeBorrowingFromXML(data []byte) (models.Borrowing, error) {
 	var borrowingXML BorrowingXML
 	err := xml.Unmarshal(data, &borrowingXML)
 	if err != nil {
-		return schemas.Borrowing{}, err
+		return models.Borrowing{}, err
 	}
-	return schemas.Borrowing{
+	return models.Borrowing{
 		ID:         borrowingXML.ID,
 		BookID:     borrowingXML.BookID,
 		MemberID:   borrowingXML.MemberID,

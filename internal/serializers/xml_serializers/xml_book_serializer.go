@@ -3,7 +3,7 @@ package xml_serializers
 import (
 	"encoding/xml"
 
-	"github.com/Matvey1109/LibraryManagementSystemAPI/internal/schemas"
+	"github.com/Matvey1109/LibraryManagementSystemCore/core/models"
 )
 
 type BookXML struct {
@@ -17,7 +17,7 @@ type BookXML struct {
 	TotalCopies     int      `xml:"totalCopies"`
 }
 
-func SerializeBookToXML(book schemas.Book) ([]byte, error) {
+func SerializeBookToXML(book models.Book) ([]byte, error) {
 	bookXML := BookXML{
 		ID:              book.ID,
 		Title:           book.Title,
@@ -36,13 +36,13 @@ func SerializeBookToXML(book schemas.Book) ([]byte, error) {
 	return data, nil
 }
 
-func DeserializeBookFromXML(data []byte) (schemas.Book, error) {
+func DeserializeBookFromXML(data []byte) (models.Book, error) {
 	var bookXML BookXML
 	err := xml.Unmarshal(data, &bookXML)
 	if err != nil {
-		return schemas.Book{}, err
+		return models.Book{}, err
 	}
-	return schemas.Book{
+	return models.Book{
 		ID:              bookXML.ID,
 		Title:           bookXML.Title,
 		Author:          bookXML.Author,

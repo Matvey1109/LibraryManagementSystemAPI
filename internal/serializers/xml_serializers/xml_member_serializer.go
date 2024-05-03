@@ -4,7 +4,7 @@ import (
 	"encoding/xml"
 	"time"
 
-	"github.com/Matvey1109/LibraryManagementSystemAPI/internal/schemas"
+	"github.com/Matvey1109/LibraryManagementSystemCore/core/models"
 )
 
 type MemberXML struct {
@@ -16,7 +16,7 @@ type MemberXML struct {
 	CreatedAt time.Time `xml:"createdAt"`
 }
 
-func SerializeMemberToXML(member schemas.Member) ([]byte, error) {
+func SerializeMemberToXML(member models.Member) ([]byte, error) {
 	memberXML := MemberXML{
 		ID:        member.ID,
 		Name:      member.Name,
@@ -33,13 +33,13 @@ func SerializeMemberToXML(member schemas.Member) ([]byte, error) {
 	return data, nil
 }
 
-func DeserializeMemberFromXML(data []byte) (schemas.Member, error) {
+func DeserializeMemberFromXML(data []byte) (models.Member, error) {
 	var memberXML MemberXML
 	err := xml.Unmarshal(data, &memberXML)
 	if err != nil {
-		return schemas.Member{}, err
+		return models.Member{}, err
 	}
-	return schemas.Member{
+	return models.Member{
 		ID:        memberXML.ID,
 		Name:      memberXML.Name,
 		Address:   memberXML.Address,

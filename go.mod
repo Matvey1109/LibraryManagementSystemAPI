@@ -6,7 +6,7 @@ require (
 	github.com/joho/godotenv v1.5.1 // indirect
 	github.com/julienschmidt/httprouter v1.3.0
 	github.com/rs/cors v1.10.1
-	go.mongodb.org/mongo-driver v1.15.0
+	go.mongodb.org/mongo-driver v1.15.0 // indirect
 )
 
 require github.com/Matvey1109/LibraryManagementSystemCore v0.0.0-20240503115506-be338714aadb

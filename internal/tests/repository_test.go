@@ -3,7 +3,6 @@ package tests
 import (
 	"testing"
 
-	"github.com/Matvey1109/LibraryManagementSystemAPI/internal/utils"
 	"github.com/Matvey1109/LibraryManagementSystemCore/core/models"
 	"github.com/Matvey1109/LibraryManagementSystemCore/core/repositories"
 
@@ -27,12 +26,11 @@ func TestMemberRepository(t *testing.T) {
 	}
 
 	// SerializeMemberToJson
-	member := utils.ConvertMemberToSchema(result[0])
-	jsonMember, _ := json_serializers.SerializeMemberToJson(member)
+	jsonMember, _ := json_serializers.SerializeMemberToJson(result[0])
 	t.Logf("Calling SerializeMemberToJson(), result = \n%v\n", string(jsonMember))
 
 	// DeserializeMemberFromJson
-	member, _ = json_serializers.DeserializeMemberFromJson(jsonMember)
+	member, _ := json_serializers.DeserializeMemberFromJson(jsonMember)
 	t.Logf("Calling DeserializeMemberFromJson(), result = %v\n", member)
 
 	// UpdateMember
@@ -50,8 +48,7 @@ func TestMemberRepository(t *testing.T) {
 	}
 
 	// SerializeMemberToXML
-	member = utils.ConvertMemberToSchema(result[0])
-	XMLMember, _ := xml_serializers.SerializeMemberToXML(member)
+	XMLMember, _ := xml_serializers.SerializeMemberToXML(result[0])
 	t.Logf("Calling SerializeMemberToXML(), result = \n%v\n", string(XMLMember))
 
 	// DeserializeMemberFromXML
@@ -87,12 +84,11 @@ func TestBookRepository(t *testing.T) {
 	}
 
 	// SerializeBookToJson
-	book := utils.ConvertBookToSchema(result[0])
-	jsonBook, _ := json_serializers.SerializeBookToJson(book)
+	jsonBook, _ := json_serializers.SerializeBookToJson(result[0])
 	t.Logf("Calling SerializeBookToJson(), result = \n%v\n", string(jsonBook))
 
 	// DeserializeBookFromJson
-	book, _ = json_serializers.DeserializeBookFromJson(jsonBook)
+	book, _ := json_serializers.DeserializeBookFromJson(jsonBook)
 	t.Logf("Calling DeserializeBookFromJson(), result = %v\n", book)
 
 	// UpdateBook
@@ -110,8 +106,7 @@ func TestBookRepository(t *testing.T) {
 	}
 
 	// SerializeBookToXML
-	book = utils.ConvertBookToSchema(result[0])
-	XMLBook, _ := xml_serializers.SerializeBookToXML(book)
+	XMLBook, _ := xml_serializers.SerializeBookToXML(result[0])
 	t.Logf("Calling SerializeBookToXML(), result = \n%v\n", string(XMLBook))
 
 	// DeserializeBookFromXML
@@ -147,12 +142,11 @@ func TestBorrowingRepository(t *testing.T) {
 	}
 
 	// SerializeBorrowingToJson
-	borrowing := utils.ConvertBorrowingToSchema(result[0])
-	jsonBorrowing, _ := json_serializers.SerializeBorrowingToJson(borrowing)
+	jsonBorrowing, _ := json_serializers.SerializeBorrowingToJson(result[0])
 	t.Logf("Calling SerializeBorrowingToJson(), result = \n%v\n", string(jsonBorrowing))
 
 	// DeserializeBorrowingFromJson
-	borrowing, _ = json_serializers.DeserializeBorrowingFromJson(jsonBorrowing)
+	borrowing, _ := json_serializers.DeserializeBorrowingFromJson(jsonBorrowing)
 	t.Logf("Calling DeserializeBorrowingFromJson(), result = %v\n", borrowing)
 
 	// ReturnBook
@@ -169,8 +163,7 @@ func TestBorrowingRepository(t *testing.T) {
 	}
 
 	// SerializeBorrowingToXML
-	borrowing = utils.ConvertBorrowingToSchema(result[0])
-	XMLBorrowing, _ := xml_serializers.SerializeBorrowingToXML(borrowing)
+	XMLBorrowing, _ := xml_serializers.SerializeBorrowingToXML(result[0])
 	t.Logf("Calling SerializeBorrowingToXML(), result = \n%v\n", string(XMLBorrowing))
 
 	// DeserializeBorrowingFromXML
