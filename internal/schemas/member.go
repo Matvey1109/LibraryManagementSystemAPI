@@ -1,4 +1,4 @@
-package models
+package schemas
 
 import "time"
 
@@ -8,8 +8,4 @@ type Member struct {
 	Address   string    `json:"address"`
 	Email     string    `json:"email"`
 	CreatedAt time.Time `json:"createdAt"`
-}
-
-func (m *Member) GetMemberID() string {
-	return m.ID
 }

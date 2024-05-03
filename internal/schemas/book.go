@@ -1,4 +1,4 @@
-package models
+package schemas
 
 type Book struct {
 	ID              string `json:"id"`
@@ -8,8 +8,4 @@ type Book struct {
 	Genre           string `json:"genre"`
 	AvailableCopies int    `json:"availableCopies"`
 	TotalCopies     int    `json:"totalCopies"`
-}
-
-func (b *Book) GetBookID() string {
-	return b.ID
 }

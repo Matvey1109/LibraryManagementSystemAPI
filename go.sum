@@ -1,5 +1,5 @@
-github.com/Matvey1109/LibraryManagementSystemSerializers v0.0.0-20240328081433-ca5adfd4395e h1:yaZEHtfHX4RMZF9rpXDsKc20ane1/QRpdqktLeJYb2A=
-github.com/Matvey1109/LibraryManagementSystemSerializers v0.0.0-20240328081433-ca5adfd4395e/go.mod h1:WCsxSS12L3AY34/gGN/DDN2SasRfiY1XQMMMQiUbE5c=
+github.com/Matvey1109/LibraryManagementSystemCore v0.0.0-20240503115506-be338714aadb h1:2YAvyFDjeDGP8CEbfZHWwDOX5eIeYeAMGedqTca3GUw=
+github.com/Matvey1109/LibraryManagementSystemCore v0.0.0-20240503115506-be338714aadb/go.mod h1:4N7YWUfUWqLgtt42YWhWgAKy0Q3k3Ct26aToLHq7e5Q=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/golang/snappy v0.0.1 h1:Qgr9rKW7uDUkrbSmQeiDsGa8SjGyCOGtuasMWwvp2P4=

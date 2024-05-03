@@ -3,10 +3,10 @@ package api
 import (
 	"net/http"
 
-	"github.com/Matvey1109/LibraryManagementSystemAPI/pkg/logs"
+	"github.com/Matvey1109/LibraryManagementSystemCore/pkg/logs"
 
-	"github.com/Matvey1109/LibraryManagementSystemSerializers/serializers"
-	"github.com/Matvey1109/LibraryManagementSystemSerializers/serializers/json_serializers"
+	"github.com/Matvey1109/LibraryManagementSystemAPI/internal/serializers"
+	"github.com/Matvey1109/LibraryManagementSystemAPI/internal/serializers/json_serializers"
 	"github.com/julienschmidt/httprouter"
 )
 

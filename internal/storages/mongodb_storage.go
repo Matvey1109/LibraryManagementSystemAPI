@@ -5,7 +5,7 @@ import (
 	"errors"
 	"time"
 
-	"github.com/Matvey1109/LibraryManagementSystemAPI/internal/models"
+	"github.com/Matvey1109/LibraryManagementSystemCore/core/models"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"

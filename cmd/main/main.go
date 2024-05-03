@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/Matvey1109/LibraryManagementSystemAPI/internal/api"
-	"github.com/Matvey1109/LibraryManagementSystemAPI/pkg/logs"
+	"github.com/Matvey1109/LibraryManagementSystemCore/pkg/logs"
 )
 
 func main() {

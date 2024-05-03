@@ -3,7 +3,7 @@ package storages
 import (
 	"errors"
 
-	"github.com/Matvey1109/LibraryManagementSystemAPI/internal/models"
+	"github.com/Matvey1109/LibraryManagementSystemCore/core/models"
 )
 
 // ! Implements interface Storage

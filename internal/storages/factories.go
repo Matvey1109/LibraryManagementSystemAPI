@@ -5,8 +5,8 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/Matvey1109/LibraryManagementSystemAPI/internal/models"
-	"github.com/Matvey1109/LibraryManagementSystemAPI/pkg/loadenv"
+	"github.com/Matvey1109/LibraryManagementSystemCore/pkg/loadenv"
+	"github.com/Matvey1109/LibraryManagementSystemCore/core/models"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )

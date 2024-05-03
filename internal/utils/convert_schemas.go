@@ -1,8 +1,8 @@
 package utils
 
 import (
-	"github.com/Matvey1109/LibraryManagementSystemAPI/internal/models"
-	"github.com/Matvey1109/LibraryManagementSystemSerializers/schemas"
+	"github.com/Matvey1109/LibraryManagementSystemCore/core/models"
+	"github.com/Matvey1109/LibraryManagementSystemAPI/internal/schemas"
 )
 
 func ConvertMemberToSchema(member models.Member) schemas.Member {

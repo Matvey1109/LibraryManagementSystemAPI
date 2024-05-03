@@ -3,12 +3,12 @@ package tests
 import (
 	"testing"
 
-	"github.com/Matvey1109/LibraryManagementSystemAPI/internal/models"
-	"github.com/Matvey1109/LibraryManagementSystemAPI/internal/repositories"
 	"github.com/Matvey1109/LibraryManagementSystemAPI/internal/utils"
+	"github.com/Matvey1109/LibraryManagementSystemCore/core/models"
+	"github.com/Matvey1109/LibraryManagementSystemCore/core/repositories"
 
-	"github.com/Matvey1109/LibraryManagementSystemSerializers/serializers/json_serializers"
-	"github.com/Matvey1109/LibraryManagementSystemSerializers/serializers/xml_serializers"
+	"github.com/Matvey1109/LibraryManagementSystemAPI/internal/serializers/json_serializers"
+	"github.com/Matvey1109/LibraryManagementSystemAPI/internal/serializers/xml_serializers"
 )
 
 func TestMemberRepository(t *testing.T) {

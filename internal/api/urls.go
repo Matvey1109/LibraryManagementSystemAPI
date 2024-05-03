@@ -4,8 +4,8 @@ import (
 	"net/http"
 
 	"github.com/Matvey1109/LibraryManagementSystemAPI/internal/swagger"
-	"github.com/Matvey1109/LibraryManagementSystemAPI/pkg/loadenv"
-	"github.com/Matvey1109/LibraryManagementSystemAPI/pkg/logs"
+	"github.com/Matvey1109/LibraryManagementSystemCore/pkg/loadenv"
+	"github.com/Matvey1109/LibraryManagementSystemCore/pkg/logs"
 
 	"github.com/julienschmidt/httprouter"
 	"github.com/rs/cors"

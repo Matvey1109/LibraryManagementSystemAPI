@@ -1,4 +1,4 @@
-package models
+package schemas
 
 type Borrowing struct {
 	ID         string `json:"id"`
@@ -6,8 +6,4 @@ type Borrowing struct {
 	MemberID   string `json:"memberId"`
 	BorrowYear int    `json:"borrowYear"`
 	ReturnYear int    `json:"returnYear,omitempty"`
-}
-
-func (b *Borrowing) GetBorrowingID() string {
-	return b.ID
 }
